@@ -1,6 +1,6 @@
 # Ouija Board for Sequencer
 <p align="center">
-  <img width="300" src="assets/guide/demo01.gif">
+  <img width="800" src="assets/guide/demo01.gif">
 </p>
 
 # How to Install
@@ -14,8 +14,8 @@ There is a compendium with journals with instructions.
 You can check changes at [CHANGELOG](CHANGELOG.md)
 
 # License
-Sound: https://99sounds.org/license/
-Image: https://pixabay.com/service/license/
-Designer: Matheus Moreno Mota
-Code: [LICENSE](LICENSE.md)
+- Sound: https://99sounds.org/license/
+- Image: https://pixabay.com/service/license/
+- Designer: Matheus Moreno Mota
+- Code: [LICENSE](LICENSE)
 

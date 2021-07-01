@@ -50,18 +50,19 @@ const symbol_04 = { x: 639.9536577292289, y: 699.8675935120822 };
 const symbol_05 = { x: 639.9536577292289, y: 699.8675935120822 };
 const symbol_06 = { x: 639.9536577292289, y: 699.8675935120822 };
 
-// ---------------------------
-const version =  'v1.0';
-let token;
-let soundToPlay = 'worlds/incompleteadventurer/oija/distant-orchestra.ogg';
+// YOU CAN TRY TO MESS WITH THIS 
+let soundToPlay = 'modules/ouija-board-for-sequencer/assets/sounds/distant-orchestra.ogg';
 let animation = 'modules/animated-spell-effects-cartoon/spell-effects/cartoon/mix/electric_ball_CIRCLE_09.webm';
-let debug = true;
 
 /* Ouija Board Control
 
 Source: 
 Icon: icons/tools/scribal/lens-grey-brown.webp
 */
+
+const debug = true;
+const version =  'v1.0';
+let token;
 
 if (canvas.tokens.controlled[0]===undefined){
   ui.notifications.error("You must select a token!");    
@@ -79,6 +80,8 @@ function main() {
   alphabet.map((t) => {
     alphabetList += `<input type="radio" id="${t}" name="target" value="${t}"><label for="${t}">${t} </label>`;
   });
+
+  let choosenMessage = chooseMessage();
 
   let template = `  
     <style type="text/css">
@@ -162,7 +165,7 @@ function main() {
     
     <div class="divTableRow">
     <div class="divTableCell">
-        <p>WARNING: PLAYING WITH SPIRITS MAY HAVE OMINOUS CONSEQUENCES!</p>
+        <p>${choosenMessage}</p>
     </div>
     </div>
 
@@ -357,5 +360,14 @@ function sceneMap(message) {
     case 'position_06':   return symbol_06;
     default: ui.notifications.error("666!");    
   }
+}
 
+function chooseMessage() {
+  let messages = [
+"Captain Howdy is looking for you",
+"Perform the whole ritual in a consecrated circle, so that undesirable spirits cannot interfere with it.",
+"Never look behind you while speaking with the dead.",
+"Playing with spirits may bring you dire consequences."
+]
+  return messages[Math.floor(Math.random() * messages.length)];
 }
