@@ -1,10 +1,6 @@
 # Ouija Board for Sequencer
 <p align="center">
-  <img width="300" src="images/guide/usedw.png">
-</p>
-
-<p align="center">
-  <img width="300" src="images/guide/folders.png">
+  <img width="300" src="assets/guide/demo01.gif">
 </p>
 
 # How to Install
