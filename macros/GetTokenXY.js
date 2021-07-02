@@ -5,23 +5,30 @@
 icon: icons/tools/hand/ruler-steel-grey.webp
 */
 
-let token;
+/*
+token.data.rotation
+
+https://github.com/fantasycalendar/FoundryVTT-Sequencer/wiki/Animations#move-towards
+*/
+
+let tokenD;
+const version = 'v1.0';
 
 if (canvas.tokens.controlled[0]===undefined){
   ui.notifications.error("You must select a token!");    
 } else {
-  token=canvas.tokens.controlled[0];
+  tokenD=canvas.tokens.controlled[0];
   main();
 }
 
 async function main() {
   let message='';
-  let finalCode = `{ x: ${token.position.x}, y: ${token.position.y} }`;
+  let finalCode = `{ x: ${tokenD.position.x}, y: ${tokenD.position.y} }`;
   
-  message += `<ul><li>X: <b style="color:red">${token.position.x}</b></li>`;
-  message += `<li>Y: <b style="color:red">${token.position.y}</b></li></ul>`;
+  message += `<ul><li>X: <b style="color:red">${tokenD.position.x}</b></li>`;
+  message += `<li>Y: <b style="color:red">${tokenD.position.y}</b></li></ul>`;
   
-  message += `<b style="color:red" id="#tokenposition">{ ${token.position.x}, ${token.position.y} }</p>`;
+  message += `<b style="color:red" id="#tokenposition">{ ${tokenD.position.x}, ${tokenD.position.y} }</p>`;
   message += `<p>Copied to clipboard.</p>`;
 
   
@@ -30,11 +37,11 @@ async function main() {
 	/* view */
 	let form = `
 		<label>Copy this</label>
-		<textarea id="moduleTextArea" rows="5" cols="33">${finalCode}</textarea>
+		<textarea id="moduleTextArea" rows="3" cols="33">${finalCode}</textarea>
 	`;
 
 	let dialog = new Dialog({
-		title: "Token Data",
+		title: `Token Data - ${version}`,
 		content: form,
 		buttons: {
 			use: {

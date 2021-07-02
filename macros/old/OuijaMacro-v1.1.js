@@ -1,63 +1,58 @@
 // ---------------------------
 // MAP
-const letter_a = { x: 231.1892510005717, y: 445.45454545454555 }; // ok
-const letter_b = { x: 292.1097770154374, y: 404.8885077186964 }; // ok
-const letter_c = { x: 349.28530588907967, y: 379.0451686678102 }; // ok
-const letter_d = { x: 404.3739279588336, y: 361.1206403659233 };
-const letter_e = { x: 461.7209834190966, y: 348.8564894225272 };
-const letter_f = { x: 514.9228130360204, y: 336.79245283018867 }; // ok
-const letter_g = { x: 577.1869639794168, y: 333.96226415094344 };
-const letter_h = { x: 637.9073756432248, y: 333.01886792452837 };
-const letter_i = { x: 691.1092052601487, y: 334.9056603773585 };
-const letter_j = { x: 738.8507718696399, y: 340.3659233847914 };
-const letter_k = { x: 801.2864493996568, y: 353.94511149228146 };
-const letter_l = { x: 862.607204116638, y: 375.2715837621499 };
-const letter_m = { x: 928.2447112635791, y: 402.42995997712984 };
-const letter_n = { x: 999.5425957690106, y: 437.70726129216706 };
-const letter_o = { x: 257.8044596912522, y: 517.3241852487137 };
-const letter_p = { x: 311.0062893081762, y: 490.53744997141234 }; // ok
-const letter_q = { x: 373.0703259005145, y: 467.52429959977144 };
-const letter_r = { x: 433.2475700400228, y: 447.54145225843365 };
-const letter_s = { x: 495.31160663236125, y: 430.9319611206406 }; // ok
-const letter_t = { x: 550.7718696397942, y: 422.2698684962837 };
+const letter_a = { x: 216.03773584905667, y: 450.00000000000006 }; // ok
+const letter_b = { x: 283.01886792452837, y: 409.4339622641509 }; // ok
+const letter_c = { x: 338.67924528301893, y: 382.0754716981132 }; // ok
+const letter_d = { x: 395.28301886792457, y: 364.1509433962264 };
+const letter_e = { x: 455.6603773584906, y: 351.8867924528302 };
+const letter_f = { x: 510.377358490566, y: 336.79245283018867 }; // ok
+const letter_g = { x: 572.6415094339623, y: 333.96226415094344 };
+const letter_h = { x: 642.4528301886793, y: 333.01886792452837 };
+const letter_i = { x: 697.1698113207547, y: 334.9056603773585 };
+const letter_j = { x: 743.3962264150944, y: 343.3962264150944 };
+const letter_k = { x: 810.377358490566, y: 358.49056603773596 };
+const letter_l = { x: 871.6981132075472, y: 378.3018867924529 };
+const letter_m = { x: 943.3962264150941, y: 408.49056603773596 };
+const letter_n = { x: 1020.7547169811319, y: 445.2830188679247 };
+const letter_o = { x: 239.62264150943395, y: 526.4150943396228 };
+const letter_p = { x: 294.33962264150944, y: 498.11320754716996 }; // ok
+const letter_q = { x: 359.433962264151, y: 473.58490566037756 };
+const letter_r = { x: 422.6415094339623, y: 449.05660377358515 };
+const letter_s = { x: 487.73584905660374, y: 433.9622641509436 }; // ok
+const letter_t = { x: 546.2264150943395, y: 420.7547169811322 };
 const letter_u = { x: 612.264150943396, y: 419.81132075471714 };
-const letter_v = { x: 679.4168096054887, y: 418.29616923956564 };
-const letter_w = { x: 758.8336192109775, y: 434.13379073756437 };// ok
+const letter_v = { x: 683.9622641509432, y: 419.81132075471714 };
+const letter_w = { x: 767.9245283018865, y: 438.679245283019 };// ok
 const letter_x = { x: 848.1132075471695, y: 463.2075471698115 };
 const letter_y = { x: 914.1509433962261, y: 489.6226415094342 };
 const letter_z = { x: 971.698113207547, y: 522.6415094339625 };
 
-const number_1 = { x: 340.8233276157804, y: 591.8524871355062 };
-const number_2 = { x: 394.9685534591192, y: 591.2807318467698 };
-const number_3 = { x: 453.2590051457976, y: 594.8827901658092 };
-const number_4 = { x: 512.2927387078329, y: 597.7129788450545 };
-const number_5 = { x: 570.583190394511, y: 596.9696969696971 };
+const number_1 = { x: 322.64150943396214, y: 600.9433962264153 };
+const number_2 = { x: 378.3018867924527, y: 601.8867924528304 };
+const number_3 = { x: 439.62264150943383, y: 600.9433962264153 };
+const number_4 = { x: 504.7169811320754, y: 603.7735849056605 };
+const number_5 = { x: 566.0377358490565, y: 600.0000000000002 };
 const number_6 = { x: 627.3584905660376, y: 599.0566037735852 };
-const number_7 = { x: 679.5883361921095, y: 594.139508290452 };
-const number_8 = { x: 735.4202401372212, y: 592.9959977129793 };
-const number_9 = { x: 791.8238993710692, y: 590.5374499714126 };
-const number_0 = { x: 860.491709548313, y: 591.109205260149 };
+const number_7 = { x: 688.6792452830188, y: 597.169811320755 };
+const number_8 = { x: 749.0566037735847, y: 599.0566037735853 };
+const number_9 = { x: 808.4905660377357, y: 598.1132075471702 };
+const number_0 = { x: 880.1886792452827, y: 597.169811320755 };
 
-const symbol_yes = { x: 321.5551743853629, y: 229.81703830760478 };
-const symbol_no = { x: 906.7467124070897, y: 227.73013150371685 };
+const symbol_yes = { x: 309.43396226415064, y: 228.30188679245316 };
+const symbol_no = { x: 918.8679245283016, y: 229.24528301886835 };
 
 const symbol_space = { x: 603.7735849056602, y: 233.96226415094372 };
 
-const symbol_01 = { x: 608.3190394511147, y: 697.5986277873074 };
+const symbol_01 = { x: 639.9536577292289, y: 699.8675935120822 };
 const symbol_02 = { x: 639.9536577292289, y: 699.8675935120822 };
 const symbol_03 = { x: 639.9536577292289, y: 699.8675935120822 };
 const symbol_04 = { x: 639.9536577292289, y: 699.8675935120822 };
 const symbol_05 = { x: 639.9536577292289, y: 699.8675935120822 };
 const symbol_06 = { x: 639.9536577292289, y: 699.8675935120822 };
 
-const bottomLocation = { x: 607.1601354620223, y: 785.2926947266571 };
-
 // YOU CAN TRY TO MESS WITH THIS 
 let soundToPlay = 'modules/ouija-board-for-sequencer/assets/sounds/distant-orchestra.ogg';
 let animation = 'modules/animated-spell-effects-cartoon/spell-effects/cartoon/mix/electric_ball_CIRCLE_09.webm';
-
-let soundToPlayEnd = 'modules/ouija-board-for-sequencer/assets/sounds/intensive-stare.ogg';
-let animationEnd = 'modules/animated-spell-effects-cartoon/spell-effects/cartoon/misc/demon_face_SQUARE.webm';
 
 /* Ouija Board Control
 
@@ -66,13 +61,13 @@ Icon: icons/tools/scribal/lens-grey-brown.webp
 */
 
 const debug = true;
-const version =  'v1.2';
-let tokenD;
+const version =  'v1.0';
+let token;
 
 if (canvas.tokens.controlled[0]===undefined){
   ui.notifications.error("You must select a token!");    
 } else {
-  tokenD=canvas.tokens.controlled[0];
+  token=canvas.tokens.controlled[0];
   main();
 }
 
@@ -207,11 +202,9 @@ function main() {
 
     <div class="divTableRow">
     <div class="divTableCell">
-      <label for="movetype">Move Type: <select id="movetype" style="width: 250px; box-sizing: border-box;border: none;background-color: #ff0000;color: white; text-align: center;">
+      <label for="movetype">Move Type: <select id="movetype" style="width: 150px; box-sizing: border-box;border: none;background-color: #ff0000;color: white; text-align: center;">
       <option value="moveType1">Type 1</option>
-      <option value="moveType2">Type 2 - No Sound</option>
-      <option value="moveType3">Type 3 - Animation</option>
-      <option value="moveType4">Type 4 - End</option>
+      <option value="moveType2">Type 2 - No Effects</option>
       </select></label>
     </div>
     </div>
@@ -257,49 +250,33 @@ async function moveThing(html) {
     sendMessage(autoMessage.toLowerCase(), moveFunction, extraTime);
   } else { // extra_position
     sendToPosition(messageType.toLowerCase(), moveFunction, extraTime);
-  } 
+  }
 }
 
-async function move3(position, extraTime=1) {
-  let sequence = new Sequence()      
-    .animation()
-        .on(tokenD)
-        .duration(1000)
-        .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
-        .waitUntilFinished()
+async function move(position, extraTime=1) {
+  let sequence = new Sequence()  
+    .thenDo(async function(){
+      await token.document.update(position, { animate: true })
+    })
+    .wait(750)
     .sound(soundToPlay)
     .effect()
       .file(animation)
-      .atLocation(tokenD)
-      .scale(0.55)
-      .waitUntilFinished()        
+      .atLocation(token)
+      .scale(0.35)
+      .waitUntilFinished()
+    .wait(200)
     .wait(extraTime);
 
   await sequence.play();  
 }
 
 async function move2(position, extraTime=1) {
-  let sequence = new Sequence()      
-    .animation()
-        .on(tokenD)
-        .duration(1000)
-        .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
-        .waitUntilFinished()
-    .wait(extraTime);
-
-  await sequence.play();  
-}
-
-async function move(position, extraTime=1) {
-  let sequence = new Sequence()      
-    .animation()
-        .on(tokenD)
-        .duration(1000)
-        .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
-        .waitUntilFinished()
+  let sequence = new Sequence()  
+    .thenDo(async function(){
+      await token.document.update(position, { animate: true })
+    })
+    .wait(750)
     .sound(soundToPlay)
     .wait(200)
     .wait(extraTime);
@@ -307,24 +284,6 @@ async function move(position, extraTime=1) {
   await sequence.play();  
 }
 
-async function moveEnd(position, extraTime=1) {
-  let sequence = new Sequence()      
-    .animation()
-        .on(tokenD)
-        .duration(1000)
-        .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
-        .waitUntilFinished()
-    .sound(soundToPlayEnd)
-    .effect()
-      .file(animationEnd)
-      .atLocation(tokenD)
-      .scale(0.55)
-      .waitUntilFinished()        
-    .wait(extraTime);
-
-  await sequence.play();  
-}
 
 async function sendMessage(text, moveFunction, extraTime=1) {
   let message = text.split('');
@@ -344,11 +303,7 @@ async function selectMoveFunction(moveType) {
     return move;
   } else if (moveType=='moveType2') {
     return move2;
-  } else if (moveType=='moveType3') {
-    return move3;
-  } else if (moveType=='moveType4') {
-    return moveEnd;
-  }  
+  }
 }
 
 // ================================================================

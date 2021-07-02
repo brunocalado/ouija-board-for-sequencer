@@ -1,5 +1,18 @@
-// Get Token
+// Get Token XY
+
+/*
+
+icon: icons/tools/hand/ruler-steel-grey.webp
+*/
+
+/*
+token.data.rotation
+
+https://github.com/fantasycalendar/FoundryVTT-Sequencer/wiki/Animations#move-towards
+*/
+
 let token;
+const version = 'v1.0';
 
 if (canvas.tokens.controlled[0]===undefined){
   ui.notifications.error("You must select a token!");    
@@ -24,11 +37,11 @@ async function main() {
 	/* view */
 	let form = `
 		<label>Copy this</label>
-		<textarea id="moduleTextArea" rows="5" cols="33">${finalCode}</textarea>
+		<textarea id="moduleTextArea" rows="3" cols="33">${finalCode}</textarea>
 	`;
 
 	let dialog = new Dialog({
-		title: "Token Data",
+		title: `Token Data - ${version}`,
 		content: form,
 		buttons: {
 			use: {
