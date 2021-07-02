@@ -1,11 +1,10 @@
 # Ouija Board for Sequencer
-<p align="center">
-  <img width="800" src="assets/guide/demo02.mp4">
-</p>
 
 <p align="center">
   <img width="800" src="assets/guide/demo01.gif">
 </p>
+
+You can watch this with sound effect: [Youtube](https://www.youtube.com/embed/QKyRQ-8nrVA)
 
 # How to Install
 1. Go to modules and use the link: 
