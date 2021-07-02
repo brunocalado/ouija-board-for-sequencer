@@ -1,5 +1,9 @@
 # Ouija Board for Sequencer
 <p align="center">
+  <img width="800" src="assets/guide/demo02.mp4">
+</p>
+
+<p align="center">
   <img width="800" src="assets/guide/demo01.gif">
 </p>
 
