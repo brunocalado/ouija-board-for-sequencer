@@ -66,7 +66,7 @@ Icon: icons/tools/scribal/lens-grey-brown.webp
 */
 
 const debug = true;
-const version =  'v1.2';
+const version =  'v1.3';
 let tokenD;
 
 if (canvas.tokens.controlled[0]===undefined){
@@ -266,7 +266,7 @@ async function move3(position, extraTime=1) {
         .on(tokenD)
         .duration(1000)
         .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
+        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic" })             
         .waitUntilFinished()
     .sound(soundToPlay)
     .effect()
@@ -285,7 +285,7 @@ async function move2(position, extraTime=1) {
         .on(tokenD)
         .duration(1000)
         .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
+        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic" })             
         .waitUntilFinished()
     .wait(extraTime);
 
@@ -298,7 +298,7 @@ async function move(position, extraTime=1) {
         .on(tokenD)
         .duration(1000)
         .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
+        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic" })             
         .waitUntilFinished()
     .sound(soundToPlay)
     .wait(200)
@@ -313,7 +313,7 @@ async function moveEnd(position, extraTime=1) {
         .on(tokenD)
         .duration(1000)
         .moveTowards(position, { ease: "easeInOutCubic" } )
-        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic", offset: -90 })             
+        .rotateTowards(bottomLocation, { duration: 1000, ease: "easeInOutCubic" })             
         .waitUntilFinished()
     .sound(soundToPlayEnd)
     .effect()
