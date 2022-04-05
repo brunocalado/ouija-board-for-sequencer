@@ -1,3 +1,6 @@
+# 0.0.5
+v9 bump
+
 # 0.0.4
 - macro update for sequencer
 
