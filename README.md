@@ -1,31 +1,27 @@
 # Ouija Board for Sequencer
+This module let you simulate a Ouija Board for your players.
 
-<p align="center">
-  <img width="800" src="assets/guide/demo01.gif">
-</p>
-
-You can watch this with sound effect: [Youtube](https://www.youtube.com/embed/QKyRQ-8nrVA)
+## Demonstration
+[![Demonstration](assets/guide/video-thumbnail.webp)](https://youtu.be/bOmA8z9-R-o)
 
 # How to Install
 1. Go to modules and use the link: 
 https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/module.json
 
 ## Instructions
-There is a compendium with journals with instructions.
+There is a compendium with journals with instructions. Read it!
 
 # Community
 If you want to share a art you made and have permission to distribute [click here](https://github.com/brunocalado/ouija-board-for-sequencer/issues)
 
 # Acknowledges
-- Cefas 
-- Matheus Moreno Mota
+- Cefas, GURPS and CSS guy.
+- Erich Matos Viegas
+- Matheus Moreno Mota, half man, half capyvara
 - @Wasp#2005 - https://github.com/fantasycalendar/FoundryVTT-Sequencer
 
 # Changelog
 You can check changes at [CHANGELOG](CHANGELOG.md)
-
-# TODO
-- settings for default delay
 
 # License
 - Sound: https://99sounds.org/license/

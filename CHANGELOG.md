@@ -1,3 +1,7 @@
+# 0.1.2
+- docs
+- dialog fix?
+
 # 0.1.1
 - move 3 fix
 - added volume control

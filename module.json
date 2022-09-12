@@ -1,7 +1,7 @@
 {
   "id": "ouija-board-for-sequencer",
   "title": "Ouija Board for Sequencer",
-  "description": "Ouija Board for Sequencer!",
+  "description": "This module let you simulate a Ouija Board for your players.",
 
   "authors": [{
     "name": "Mestre Digital",
@@ -10,7 +10,7 @@
   
   "flags": {},
   
-  "version": "0.1.1",
+  "version": "0.1.2",
   
   "compatibility": {
     "minimum": 10,
