@@ -1,3 +1,7 @@
+# 0.1.1
+- move 3 fix
+- added volume control
+
 # 0.1.0
 - v10 
 - settings

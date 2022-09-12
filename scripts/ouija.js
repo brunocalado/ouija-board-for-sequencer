@@ -114,9 +114,9 @@ export class ouija {
     if (moveType == 'moveType1') { // Standard - sound / no animation
       const output = await this.movePattern1(letter); 
     } else if (moveType == 'moveType2') { // no sound / no animation
-      const output = this.movePattern2(letter); 
-    } else if (moveType == 'moveType4') { // sound + Animation at the End
-      const output = this.movePatternAnimationEnd(letter);
+      const output = await this.movePattern2(letter); 
+    } else if (moveType == 'moveType3') { // sound + Animation at the End
+      const output = await this.movePatternAnimationEnd(letter);
     }    
   }
 
@@ -126,7 +126,8 @@ export class ouija {
     ouija.movePattern1(position, extraTime);
   */
   static async movePattern1(position, extraTime = 1) {    
-    let soundToPlay = game.settings.get("ouija-board-for-sequencer", "move_sound");
+    const soundToPlay = game.settings.get("ouija-board-for-sequencer", "move_sound");
+    const sound_volume = game.settings.get("ouija-board-for-sequencer", "move_sound_volume")
     const xyPosition = this.sceneMap(position);
     
     let sequence = new Sequence()
@@ -143,6 +144,7 @@ export class ouija {
 
       .waitUntilFinished()
       .sound(soundToPlay)
+        .volume(sound_volume)
       .wait(200)
       .wait(extraTime);
 
@@ -182,6 +184,7 @@ export class ouija {
   */    
   static async movePatternAnimationEnd(position, extraTime = 1) {
     const soundToPlay = game.settings.get("ouija-board-for-sequencer", "end_move_sound");
+    const sound_volume = game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume")
     const animationEnd = game.settings.get("ouija-board-for-sequencer", "end_animation");
     const xyPosition = this.sceneMap(position);
     
@@ -198,6 +201,7 @@ export class ouija {
         })
       .waitUntilFinished()
       .sound(soundToPlay)
+        .volume(sound_volume)
       .effect()
         .file(animationEnd)
         .atLocation(ouija_token)

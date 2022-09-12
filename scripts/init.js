@@ -18,7 +18,22 @@ Hooks.once('init', () => {
     default: 'modules/sequencer/samples/OujiaBoard/assets_sounds_distant-orchestra.ogg',
     type: String
   });
-
+  
+  // call this with: game.settings.get("ouija-board-for-sequencer", "move_sound_volume")
+  game.settings.register(moduleName, 'move_sound_volume', {
+    name: 'Move Sound Volume', // "Warning Sound Volume"
+    hint: 'You can set the volume for the move sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.', // "You can set the volume for the warning sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume."
+    scope: 'world',
+    config: true,
+    default: 0.8,
+    range: {
+        min: 0.2,
+        max: 1,
+        step: 0.1
+    },     
+    type: Number
+  });
+  
   // call this with: game.settings.get("ouija-board-for-sequencer", "end_move_sound");
   game.settings.register(moduleName, 'end_move_sound', {
     name: 'End Move Sound',
@@ -28,6 +43,22 @@ Hooks.once('init', () => {
     default: 'modules/sequencer/samples/OujiaBoard/assets_sounds_intensive-stare.ogg',
     type: String
   });
+
+  // call this with: game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume")
+  game.settings.register(moduleName, 'end_move_sound_volume', {
+    name: 'End Move Sound Volume', // "Warning Sound Volume"
+    hint: 'You can set the volume for the move sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.', // "You can set the volume for the warning sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume."
+    scope: 'world',
+    config: true,
+    default: 0.9,
+    range: {
+        min: 0.2,
+        max: 1,
+        step: 0.1
+    },     
+    type: Number
+  });
+  
   
   // call this with: game.settings.get("ouija-board-for-sequencer", "end_animation");
   game.settings.register(moduleName, 'end_animation', {
