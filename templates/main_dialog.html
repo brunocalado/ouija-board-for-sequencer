@@ -1,0 +1,92 @@
+<style>   
+   .titulo {
+   background-color: black;
+   height: 26px;
+   color: beige;
+   font-size: 15px;
+   font-weight: 400;
+   text-align: center;
+   padding-top: 5px;
+   }
+   .boxcheck {
+   text-align: center;
+   justify-content: center;
+   margin-left: 5px;
+   font-size: 15px;
+   padding: 10px;
+   }
+   .boxcheckpai {
+   background-color: rgba(107, 107, 107, 0.166);
+   height: auto;
+   margin-bottom: 10px;
+   }
+   .containerform {
+   display: flex;
+   }
+   .containerduo {
+   height: 50%;
+   display: inline-block;
+   }
+</style>
+
+<div class="divTableRow">
+   <div class="divTableCell">
+      <p class="titulo">Message</p>
+      <div class="boxcheckpai">
+         <div class="boxcheck">
+            <input type="radio" id="position_yes" name="extra_position" value="message" checked> 	&nbsp;  Message
+            <input type="radio" id="position_yes" name="extra_position" value="position_yes">  	&nbsp; Yes
+            <input type="radio" id="position_no" name="extra_position" value="position_no">  	&nbsp; No
+         </div>
+      </div>
+      <textarea name="text" id="message" cols="20" rows="6" placeholder="type"></textarea>
+   </div>
+   
+   <p class="titulo">Choose instead of the message:</p>
+   <div class="boxcheckpai">
+      <div class="boxcheck" >
+         <input type="radio" id="position_01" name="extra_position" value="position_01">
+         <label for="support_1">Custom Position 1</label>
+         <input type="radio" id="position_02" name="extra_position" value="position_02">
+         <label for="support_1">Custom Position 2</label>
+         <input type="radio" id="position_03" name="extra_position" value="position_03">
+         <label for="support_1">Custom Position 3</label>
+         <div class="boxcheck">
+            <input type="radio" id="position_04" name="extra_position" value="position_04">
+            <label for="support_1">Custom Position 4</label>
+            <input type="radio" id="position_05" name="extra_position" value="position_05">
+            <label for="support_1">Custom Position 5</label>
+            <input type="radio" id="position_06" name="extra_position" value="position_06">
+            <label for="support_1">Custom Position 6</label>
+         </div>
+      </div>
+   </div>
+</div>
+
+</div>
+</div>
+</label>
+</div>
+</div>
+
+<div class="containerform">
+   <div class="containerduo">
+      <form>
+         <label for="movetype" style="margin-bottom: 8px;">
+            Move Type: 
+            <select id="movetype" style="display: inline-block;">
+               <option value="moveType1">Standard</option>
+               <option value="moveType2">No Sound/No Animation</option>
+               <option value="moveType3">Animation at End</option>
+            </select>
+      </form>
+   </div>
+   <div class="containerduo">
+   <form>
+   <label">Delay (ms):</label>
+   <input id="extraTime" type="number" min=1 max=3000 value=1> 
+   </form>
+   </div>
+</div>
+
+</div>

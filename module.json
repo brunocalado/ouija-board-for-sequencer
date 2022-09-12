@@ -1,18 +1,26 @@
 {
-  "name": "ouija-board-for-sequencer",
-  "title": "Ouija board for Sequencer",
-  "description": "Ouija board for Sequencer",
-  "author": "Mestre Digital",
-  "authors": [],
-  "url": "https://github.com/brunocalado/ouija-board-for-sequencer",
+  "id": "ouija-board-for-sequencer",
+  "title": "Ouija Board for Sequencer",
+  "description": "Ouija Board for Sequencer!",
+
+  "authors": [{
+    "name": "Mestre Digital",
+    "url": "https://youtube.com/mestredigital"
+  }],
+  
   "flags": {},
-  "version": "0.0.5",
-  "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "9",
-  "scripts": [],
-  "esmodules": [],
+  
+  "version": "0.1.0",
+  
+  "compatibility": {
+    "minimum": 10,
+    "verified": "10"
+  },
+  
+  "esmodules": ["/scripts/init.js"],
   "styles": [],
   "languages": [],
+
   "packs": [
     {
       "name": "journal-ouija-board",
@@ -37,17 +45,21 @@
       "entity": "Scene",
       "module": "ouija-board-for-sequencer",
       "private": true
-    }    
+    }  
   ],
-  "dependencies": [{
-          "type": "module",
-          "name": "sequencer",
-          "manifest": "https://github.com/Haxxer/FoundryVTT-Sequencer/releases/latest/download/module.json"
-      }
-  ],
+  
+  "relationships": {
+    "requires": [{
+      "id": "sequencer",
+      "type": "module",
+      "manifest": "https://github.com/Haxxer/FoundryVTT-Sequencer/releases/latest/download/module.json"
+    }]
+  },
+  
   "socket": false,
+ 
+  "url": "https://github.com/brunocalado/ouija-board-for-sequencer", 
   "manifest": "https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/module.json",
-  "download": "https://codeload.github.com/brunocalado/ouija-board-for-sequencer/zip/main",
-  "protected": false,
-  "coreTranslation": false
+  "download": "https://codeload.github.com/brunocalado/ouija-board-for-sequencer/zip/main"
+
 }

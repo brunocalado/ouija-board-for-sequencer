@@ -1,3 +1,8 @@
+# 0.1.0
+- v10 
+- settings
+- docs
+
 # 0.0.5
 v9 bump
 
