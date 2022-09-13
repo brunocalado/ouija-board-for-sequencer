@@ -1,3 +1,8 @@
+# 0.1.3
+- dialog css
+- min/max time 
+- docs
+
 # 0.1.2
 - docs
 - dialog fix?

@@ -1,5 +1,7 @@
 let ouija_map;
 let ouija_token;
+let extraTimeMin=1;
+let extraTimeMax=1;
       
 // const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
 export class ouija {
@@ -88,29 +90,34 @@ export class ouija {
 
   static async moveThing(html) {
     let msg = '';
+    const messageType = html.find('input[name="extra_position"]:checked')[0].value; // message, position_yes, position_no
+    const autoMessage = html.find("#message")[0].value;
+    extraTimeMin = parseInt( html.find("#extraTimeMin")[0].value );
+    extraTimeMax = parseInt( html.find("#extraTimeMax")[0].value );
+    const moveType = html.find('#movetype')[0].value; // Standard, No Sound/No Animation, Animation at End
+    const customPosition = html.find('#custom_position')[0].value; // custom_position_choose, position_01, ..., position_06
 
-    const moveType = html.find('#movetype')[0].value;
-    let autoMessage = html.find("#message")[0].value;
-    let extraTime = html.find("#extraTime")[0].value;
-    let messageType = html.find('input[name="extra_position"]:checked')[0].value;
-
-    if (messageType == 'message') { // Message
-      this.sendMessage(autoMessage.toLowerCase(), moveType, extraTime);
-    } else { // Custom Position
-      this.sendToPosition(messageType.toLowerCase(), moveType, extraTime);
+    if (messageType=='message' && customPosition=='custom_position_choose' ) { // Message
+      this.sendMessage(autoMessage.toLowerCase(), moveType);
+    } else { // 
+      if ( customPosition!='custom_position_choose' ) {
+        this.sendToPosition(customPosition.toLowerCase(), moveType);
+      } else {
+        this.sendToPosition(messageType.toLowerCase(), moveType);
+      }
     }
   }
 
-  static async sendMessage(text, moveType, extraTime = 1) {
+  static async sendMessage(text, moveType) {
     let message = text.split('');
 
     for (let index = 0; index < message.length; index++) {
       const letter = message[index];
-      const output = await this.sendToPosition(letter, moveType, extraTime);
+      const output = await this.sendToPosition(letter, moveType);
     }
   }
 
-  static async sendToPosition(letter, moveType, extraTime = 1) {    
+  static async sendToPosition(letter, moveType) {    
     if (moveType == 'moveType1') { // Standard - sound / no animation
       const output = await this.movePattern1(letter); 
     } else if (moveType == 'moveType2') { // no sound / no animation
@@ -125,7 +132,7 @@ export class ouija {
     const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
     ouija.movePattern1(position, extraTime);
   */
-  static async movePattern1(position, extraTime = 1) {    
+  static async movePattern1(position) {    
     const soundToPlay = game.settings.get("ouija-board-for-sequencer", "move_sound");
     const sound_volume = game.settings.get("ouija-board-for-sequencer", "move_sound_volume")
     const xyPosition = this.sceneMap(position);
@@ -146,7 +153,7 @@ export class ouija {
       .sound(soundToPlay)
         .volume(sound_volume)
       .wait(200)
-      .wait(extraTime);
+      .wait(extraTimeMin, extraTimeMax);
 
     await sequence.play();
   }
@@ -156,7 +163,7 @@ export class ouija {
     const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
     ouija.movePattern2(position, extraTime);
   */
-  static async movePattern2(position, extraTime = 1) {
+  static async movePattern2(position) {
     const xyPosition = this.sceneMap(position);
     
     let sequence = new Sequence()
@@ -172,7 +179,7 @@ export class ouija {
       })
 
       .waitUntilFinished()
-      .wait(extraTime);
+      .wait(extraTimeMin, extraTimeMax);
 
     await sequence.play();
   }
@@ -182,7 +189,7 @@ export class ouija {
   const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
   ouija.movePatternEnd();
   */    
-  static async movePatternAnimationEnd(position, extraTime = 1) {
+  static async movePatternAnimationEnd(position) {
     const soundToPlay = game.settings.get("ouija-board-for-sequencer", "end_move_sound");
     const sound_volume = game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume")
     const animationEnd = game.settings.get("ouija-board-for-sequencer", "end_animation");
@@ -208,7 +215,7 @@ export class ouija {
         .scale(0.55)
       .waitUntilFinished()
 
-      .wait(extraTime);
+      .wait(extraTimeMin, extraTimeMax);
 
     await sequence.play();
   }

@@ -1,94 +1,96 @@
 <style>   
    .titulo {
-   background-color: black;
-   height: 26px;
-   color: beige;
-   font-size: 15px;
-   font-weight: 400;
-   text-align: center;
-   padding-top: 5px;
+     background-color: black;
+     height: 26px;
+     color: beige;
+     font-size: 15px;
+     font-weight: 400;
+     text-align: center;
+     padding-top: 5px;
    }
+   
    .boxcheck {
-   text-align: center;
-   justify-content: center;
-   margin-left: 5px;
-   font-size: 15px;
-   padding: 10px;
+     text-align: center;
+     justify-content: center;
+     margin-left: 5px;
+     font-size: 15px;
+     padding: 10px;
    }
+   
    .boxcheckpai {
-   background-color: rgba(107, 107, 107, 0.166);
-   height: auto;
-   margin-bottom: 10px;
+     background-color: rgba(107, 107, 107, 0.166);
+     height: auto;
+     margin-bottom: 10px;
    }
+   
    .containerform {
-   display: flex;
+    display: flex;
    }
+   
    .containerduo {
-   height: 50%;
-   display: inline-block;
+     height: 50%;
+     display: inline-block;
    }
 </style>
 
 <div class="divTableRow">
-   <div class="divTableCell">
-      <p class="titulo">Message</p>
-      <div class="boxcheckpai">
-         <div class="boxcheck">
-            <input type="radio" id="position_yes" name="extra_position" value="message" checked> 	&nbsp;  Message
-            <input type="radio" id="position_yes" name="extra_position" value="position_yes">  	&nbsp; Yes
-            <input type="radio" id="position_no" name="extra_position" value="position_no">  	&nbsp; No
-         </div>
-      </div>
-      <textarea name="text" id="message" cols="20" rows="2" placeholder="Type the message of the spirits: wasp"></textarea>
-   </div>
-   
-   <p class="titulo">Choose instead of the message:</p>
+
+<div class="divTableCell">
+   <p class="titulo">Message</p>
    <div class="boxcheckpai">
-      <div class="boxcheck" >
-         <input type="radio" id="position_01" name="extra_position" value="position_01">
-         <label for="support_1">Custom Position 1</label>
-         <input type="radio" id="position_02" name="extra_position" value="position_02">
-         <label for="support_1">Custom Position 2</label>
-         <input type="radio" id="position_03" name="extra_position" value="position_03">
-         <label for="support_1">Custom Position 3</label>
-         <div class="boxcheck">
-            <input type="radio" id="position_04" name="extra_position" value="position_04">
-            <label for="support_1">Custom Position 4</label>
-            <input type="radio" id="position_05" name="extra_position" value="position_05">
-            <label for="support_1">Custom Position 5</label>
-            <input type="radio" id="position_06" name="extra_position" value="position_06">
-            <label for="support_1">Custom Position 6</label>
-         </div>
+      <div class="boxcheck">
+         <input type="radio" id="position_message" name="extra_position" value="message" checked style="cursor: pointer;"> 	&nbsp;  
+         <label for="position_message" style="cursor: pointer;"> Message </label>
+         <input type="radio" id="position_yes" name="extra_position" value="position_yes" style="cursor: pointer;">  	&nbsp; 
+         <label for="position_yes" style="cursor: pointer;"> Yes </label>
+         <input type="radio" id="position_no" name="extra_position" value="position_no" style="cursor: pointer;">  	&nbsp; 
+         <label for="position_no" style="cursor: pointer;"> No </label>
       </div>
    </div>
+   <textarea name="text" id="message" cols="20" rows="3" placeholder="Insert your text here. ex: wasp "></textarea>
 </div>
 
-</div>
-</div>
-</label>
-</div>
-</div>
-
-<div>
-
-   <div class="containerduo">
-      <form>
-         <label for="movetype" style="margin-bottom: 8px;">Move Type:</label>             
-            <select id="movetype">
-               <option value="moveType1">Standard</option>
-               <option value="moveType2">No Sound/No Animation</option>
-               <option value="moveType3">Animation at End</option>
-            </select>
-      </form>
-   </div>
+<p class="titulo">Position:</p>
+<div class="boxcheckpai">
+   <form>
+      <div class="form-group">
+         <label style="text-align:left;">Custom Position:</label>
+         <select id="custom_position" name="custom_position" style="cursor: pointer;">
+            <option value="custom_position_choose">Choose</option>
+            <option value="position_01">Custom Position 1</option>
+            <option value="position_02">Custom Position 2</option>
+            <option value="position_03">Custom Position 3</option>
+            <option value="position_04">Custom Position 4</option>
+            <option value="position_05">Custom Position 5</option>
+            <option value="position_06">Custom Position 6</option>
+         </select>
+      </div>
+   </form>
    
-   <div class="containerduo">
-     <form>
-       <label">Delay (ms):</label>
-       <input id="extraTime" type="number" min="1" max="3000" value="1"> 
-     </form>
-   </div>
+   <p class="titulo">Others:</p>
+   <form>
+      <div class="form-group">
+         <label style="text-align:left;">Move Type: </label>
+         <select id="movetype" name="movetype"style="cursor: pointer;">
+            <option value="moveType1">Standard</option>
+            <option value="moveType2">No Sound/No Animation</option>
+            <option value="moveType3">Animation at End</option>
+            \     
+         </select>
+      </div>
+   </form>
    
-</div>
-
+   <form>
+      <div class="form-group">
+         <label>Delay Min:</label>
+         <input id="extraTimeMin" type="number" name="extraTimeMin" style="cursor: auto;" value="1" min="1" max="10000" placeholder="miliseconds"
+            required>
+         <label> Delay Max:</label>
+         <input id="extraTimeMax" type="number" name="extraTimeMax" style="cursor: auto;" value="1" min="1" max="10000" placeholder="miliseconds"
+            required>            
+      </div>
+      &nbsp;
+      <br>
+   </form>
+   
 </div>
