@@ -19,6 +19,7 @@ If you want to share a art you made and have permission to distribute [click her
 - Erich Matos Viegas
 - Matheus Moreno Mota, half man, half capyvara
 - @Wasp#2005 - https://github.com/fantasycalendar/FoundryVTT-Sequencer
+- https://github.com/RebelMage
 
 # Changelog
 You can check changes at [CHANGELOG](CHANGELOG.md)
