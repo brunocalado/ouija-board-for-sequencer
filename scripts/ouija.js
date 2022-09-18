@@ -67,8 +67,10 @@ export class ouija {
       ouija_token = canvas.tokens.controlled[0];
       ouija_map = map;
     }
-
-    let templateData = {};
+    
+    const extraTimeMinDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_min_default");
+    const extraTimeMaxDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_max_default");
+    const templateData = {extraTimeMinDefault: extraTimeMinDefault, extraTimeMaxDefault: extraTimeMaxDefault};
     const template = await renderTemplate(`modules/ouija-board-for-sequencer/templates/main_dialog.html`, templateData);
 
     new Dialog({
@@ -110,11 +112,16 @@ export class ouija {
 
   static async sendMessage(text, moveType) {
     let message = text.split('');
+    let previousLetter; // jiggle
 
     for (let index = 0; index < message.length; index++) {
       const letter = message[index];
+      if (letter === previousLetter) {
+        await this.jiggle(letter);
+      }
       const output = await this.sendToPosition(letter, moveType);
-    }
+      previousLetter = letter;
+    } // END FOR
   }
 
   static async sendToPosition(letter, moveType) {    
@@ -125,6 +132,25 @@ export class ouija {
     } else if (moveType == 'moveType3') { // sound + Animation at the End
       const output = await this.movePatternAnimationEnd(letter);
     }    
+  }
+  
+  // Move the planchette slightly when new letter is the same as old letter.
+  // This way, it's obvious that a new letter is being selected.
+  static async jiggle(letter) {
+    const xyPosition = this.sceneMap(letter);
+    let newX = xyPosition.x;
+    newX -= 15;
+    let newY = xyPosition.y;
+    newY -= 25;
+    
+    let sequence = new Sequence()
+      .animation()
+      .on(ouija_token)
+      .duration(500)
+      .moveTowards({ x: newX, y: newY})
+      .waitUntilFinished();
+
+    await sequence.play();
   }
 
   /* ---------------------------------------------

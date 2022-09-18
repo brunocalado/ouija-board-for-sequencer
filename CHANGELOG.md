@@ -1,3 +1,10 @@
+# 0.1.4
+- call the same letter will jiggle: https://github.com/RebelMage
+- sound settinngs change: https://github.com/RebelMage 
+- mapping fix for macro
+- docs
+- settings for default extra time.
+
 # 0.1.3
 - dialog css
 - min/max time 
