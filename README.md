@@ -12,7 +12,8 @@ https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/mod
 There is a compendium with journals with instructions. Read it!
 
 # Community
-If you want to share a art you made and have permission to distribute [click here](https://github.com/brunocalado/ouija-board-for-sequencer/issues)
+- If you want to share an art you made and have permission to distribute [click here](https://github.com/brunocalado/ouija-board-for-sequencer/issues)
+- You can report bugs, request features at [issues](https://github.com/brunocalado/ouija-board-for-sequencer/issues)
 
 # Acknowledges
 - Cefas, GURPS and CSS guy.

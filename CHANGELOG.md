@@ -1,3 +1,6 @@
+# 0.1.5
+- small clean up
+
 # 0.1.4
 - call the same letter will jiggle: https://github.com/RebelMage
 - sound settinngs change: https://github.com/RebelMage 
