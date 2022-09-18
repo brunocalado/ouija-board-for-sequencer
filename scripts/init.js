@@ -59,7 +59,6 @@ Hooks.once('init', () => {
     type: Number
   });
   
-  
   // call this with: game.settings.get("ouija-board-for-sequencer", "end_animation");
   game.settings.register(moduleName, 'end_animation', {
     name: 'End Animation',
@@ -69,6 +68,26 @@ Hooks.once('init', () => {
     default: 'modules/ouija-board-for-sequencer/assets/animation/TollTheDeadSkullSmoke_01_Regular_Grey_400x400.webm',
     type: String
   });  
+
+  // call this with: game.settings.get("ouija-board-for-sequencer", "extra_time_min_default")
+  game.settings.register(moduleName, 'extra_time_min_default', {
+    name: 'Extra time minimum default', // 
+    hint: 'This will define the minimum amount of extra time for next move start to execute.',
+    scope: 'world',
+    config: true,
+    default: 1, 
+    type: Number
+  });
+  
+  // call this with: game.settings.get("ouija-board-for-sequencer", "extra_time_max_default")
+  game.settings.register(moduleName, 'extra_time_max_default', {
+    name: 'Extra time maximum default', // 
+    hint: 'This will define the maximum amount of extra time for next move start to execute.', 
+    scope: 'world',
+    config: true,
+    default: 1, 
+    type: Number
+  });
   
 });
 
