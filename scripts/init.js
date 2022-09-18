@@ -27,7 +27,7 @@ Hooks.once('init', () => {
     config: true,
     default: 0.8,
     range: {
-        min: 0.2,
+        min: 0,
         max: 1,
         step: 0.1
     },     
@@ -52,7 +52,7 @@ Hooks.once('init', () => {
     config: true,
     default: 0.9,
     range: {
-        min: 0.2,
+        min: 0,
         max: 1,
         step: 0.1
     },     
