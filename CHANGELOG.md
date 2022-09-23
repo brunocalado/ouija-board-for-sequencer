@@ -1,3 +1,6 @@
+# 0.1.6
+- manifest fix
+
 # 0.1.5
 - small clean up
 
