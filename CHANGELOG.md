@@ -1,3 +1,6 @@
+# 0.1.7
+- filepicker in settings
+
 # 0.1.6
 - manifest fix
 

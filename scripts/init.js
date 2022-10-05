@@ -16,7 +16,8 @@ Hooks.once('init', () => {
     scope: 'world',
     config: true,
     default: 'modules/sequencer/samples/OujiaBoard/assets_sounds_distant-orchestra.ogg',
-    type: String
+    type: String,
+    filePicker: 'audio'
   });
   
   // call this with: game.settings.get("ouija-board-for-sequencer", "move_sound_volume")
@@ -41,7 +42,8 @@ Hooks.once('init', () => {
     scope: 'world',
     config: true,
     default: 'modules/sequencer/samples/OujiaBoard/assets_sounds_intensive-stare.ogg',
-    type: String
+    type: String,
+    filePicker: 'audio'
   });
 
   // call this with: game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume")
@@ -66,7 +68,8 @@ Hooks.once('init', () => {
     scope: 'world',
     config: true,
     default: 'modules/ouija-board-for-sequencer/assets/animation/TollTheDeadSkullSmoke_01_Regular_Grey_400x400.webm',
-    type: String
+    type: String,
+    filePicker: 'imagevideo'
   });  
 
   // call this with: game.settings.get("ouija-board-for-sequencer", "extra_time_min_default")
