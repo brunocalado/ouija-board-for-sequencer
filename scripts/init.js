@@ -91,6 +91,87 @@ Hooks.once('init', () => {
     default: 1, 
     type: Number
   });
-  
+
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
+  game.settings.register(moduleName, 'custom_position_label_1', {
+    name: 'Custom Position Label - 1',
+    hint: 'This will change the label for the Custom Position 1.',
+    scope: 'world',
+    config: true,
+    default: 'Good Bye',
+    type: String
+  });
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_2");
+  game.settings.register(moduleName, 'custom_position_label_2', {
+    name: 'Custom Position Label - 2',
+    hint: 'This will change the label for the Custom Position 2.',
+    scope: 'world',
+    config: true,
+    default: 'Left Skull',
+    type: String
+  });
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_3");
+  game.settings.register(moduleName, 'custom_position_label_3', {
+    name: 'Custom Position Label - 3',
+    hint: 'This will change the label for the Custom Position 3.',
+    scope: 'world',
+    config: true,
+    default: 'Sun',
+    type: String
+  });
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_4");
+  game.settings.register(moduleName, 'custom_position_label_4', {
+    name: 'Custom Position Label - 4',
+    hint: 'This will change the label for the Custom Position 4.',
+    scope: 'world',
+    config: true,
+    default: 'Right Skull',
+    type: String
+  });
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
+  game.settings.register(moduleName, 'custom_position_label_5', {
+    name: 'Custom Position Label - 5',
+    hint: 'This will change the label for the Custom Position 5.',
+    scope: 'world',
+    config: true,
+    default: 'Moon',
+    type: String
+  });
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_6");
+  game.settings.register(moduleName, 'custom_position_label_6', {
+    name: 'Custom Position Label - 6',
+    hint: 'This will change the label for the Custom Position 6.',
+    scope: 'world',
+    config: true,
+    default: 'First Candle',
+    type: String
+  });  
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_7");
+  game.settings.register(moduleName, 'custom_position_label_7', {
+    name: 'Custom Position Label - 7',
+    hint: 'This will change the label for the Custom Position 7.',
+    scope: 'world',
+    config: true,
+    default: 'Second Candle',
+    type: String
+  }); 
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_8");
+  game.settings.register(moduleName, 'custom_position_label_8', {
+    name: 'Custom Position Label - 8',
+    hint: 'This will change the label for the Custom Position 8.',
+    scope: 'world',
+    config: true,
+    default: 'Key',
+    type: String
+  }); 
+  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_9");
+  game.settings.register(moduleName, 'custom_position_label_9', {
+    name: 'Custom Position Label - 9',
+    hint: 'This will change the label for the Custom Position 9.',
+    scope: 'world',
+    config: true,
+    default: 'Crystal',
+    type: String
+  });   
 });
 

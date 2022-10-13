@@ -70,7 +70,27 @@ export class ouija {
     
     const extraTimeMinDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_min_default");
     const extraTimeMaxDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_max_default");
-    const templateData = {extraTimeMinDefault: extraTimeMinDefault, extraTimeMaxDefault: extraTimeMaxDefault};
+    const customPositionLabel1=game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
+    const customPositionLabel2=game.settings.get("ouija-board-for-sequencer", "custom_position_label_2");
+    const customPositionLabel3=game.settings.get("ouija-board-for-sequencer", "custom_position_label_3");
+    const customPositionLabel4=game.settings.get("ouija-board-for-sequencer", "custom_position_label_4");
+    const customPositionLabel5=game.settings.get("ouija-board-for-sequencer", "custom_position_label_5");
+    const customPositionLabel6=game.settings.get("ouija-board-for-sequencer", "custom_position_label_6");
+    const customPositionLabel7=game.settings.get("ouija-board-for-sequencer", "custom_position_label_7");
+    const customPositionLabel8=game.settings.get("ouija-board-for-sequencer", "custom_position_label_8");    
+    const customPositionLabel9=game.settings.get("ouija-board-for-sequencer", "custom_position_label_9");    
+    const templateData = {
+      extraTimeMinDefault: extraTimeMinDefault, extraTimeMaxDefault: extraTimeMaxDefault,
+      customPositionLabel1: customPositionLabel1,
+      customPositionLabel2: customPositionLabel2,
+      customPositionLabel3: customPositionLabel3,
+      customPositionLabel4: customPositionLabel4,
+      customPositionLabel5: customPositionLabel5,
+      customPositionLabel6: customPositionLabel6,
+      customPositionLabel7: customPositionLabel7,
+      customPositionLabel8: customPositionLabel8,
+      customPositionLabel9: customPositionLabel9
+    };
     const template = await renderTemplate(`modules/ouija-board-for-sequencer/templates/main_dialog.html`, templateData);
 
     new Dialog({
@@ -343,6 +363,12 @@ export class ouija {
         return ouija_map.symbol_05;
       case 'position_06':
         return ouija_map.symbol_06;
+      case 'position_07':
+        return ouija_map.symbol_07;
+      case 'position_08':
+        return ouija_map.symbol_08;
+      case 'position_09':
+        return ouija_map.symbol_09;        
       default:
         ui.notifications.error("666!");
     };

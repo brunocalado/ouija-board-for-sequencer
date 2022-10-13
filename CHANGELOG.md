@@ -1,3 +1,9 @@
+# 0.1.8
+- small compendium fix
+- nine custom positions
+- You can change the custom position label
+- readme updated
+
 # 0.1.7
 - filepicker in settings
 
