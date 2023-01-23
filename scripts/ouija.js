@@ -2,6 +2,7 @@ let ouija_map;
 let ouija_token;
 let extraTimeMin=1;
 let extraTimeMax=1;
+let moveSpeed=1000;
       
 // const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
 export class ouija {
@@ -70,6 +71,7 @@ export class ouija {
     
     const extraTimeMinDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_min_default");
     const extraTimeMaxDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_max_default");
+    const moveSpeedDefault=game.settings.get("ouija-board-for-sequencer", "move_speed_default");    
     const customPositionLabel1=game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
     const customPositionLabel2=game.settings.get("ouija-board-for-sequencer", "custom_position_label_2");
     const customPositionLabel3=game.settings.get("ouija-board-for-sequencer", "custom_position_label_3");
@@ -80,7 +82,7 @@ export class ouija {
     const customPositionLabel8=game.settings.get("ouija-board-for-sequencer", "custom_position_label_8");    
     const customPositionLabel9=game.settings.get("ouija-board-for-sequencer", "custom_position_label_9");    
     const templateData = {
-      extraTimeMinDefault: extraTimeMinDefault, extraTimeMaxDefault: extraTimeMaxDefault,
+      extraTimeMinDefault: extraTimeMinDefault, extraTimeMaxDefault: extraTimeMaxDefault, moveSpeedDefault: moveSpeedDefault,
       customPositionLabel1: customPositionLabel1,
       customPositionLabel2: customPositionLabel2,
       customPositionLabel3: customPositionLabel3,
@@ -91,6 +93,7 @@ export class ouija {
       customPositionLabel8: customPositionLabel8,
       customPositionLabel9: customPositionLabel9
     };
+
     const template = await renderTemplate(`modules/ouija-board-for-sequencer/templates/main_dialog.html`, templateData);
 
     new Dialog({
@@ -116,6 +119,7 @@ export class ouija {
     const autoMessage = html.find("#message")[0].value;
     extraTimeMin = parseInt( html.find("#extraTimeMin")[0].value );
     extraTimeMax = parseInt( html.find("#extraTimeMax")[0].value );
+    moveSpeed = parseInt( html.find("#moveSpeed")[0].value );
     const moveType = html.find('#movetype')[0].value; // Standard, No Sound/No Animation, Animation at End
     const customPosition = html.find('#custom_position')[0].value; // custom_position_choose, position_01, ..., position_06
 
@@ -132,14 +136,15 @@ export class ouija {
 
   static async sendMessage(text, moveType) {
     let message = text.split('');
-    let previousLetter; // jiggle
+    let previousLetter=null; // jiggle
 
     for (let index = 0; index < message.length; index++) {
       const letter = message[index];
       if (letter === previousLetter) {
         await this.jiggle(letter);
+      } else {
+        const output = await this.sendToPosition(letter, moveType);
       }
-      const output = await this.sendToPosition(letter, moveType);
       previousLetter = letter;
     } // END FOR
   }
@@ -162,15 +167,28 @@ export class ouija {
     newX -= 15;
     let newY = xyPosition.y;
     newY -= 25;
-    
+
     let sequence = new Sequence()
       .animation()
       .on(ouija_token)
-      .duration(500)
-      .moveTowards({ x: newX, y: newY})
-      .waitUntilFinished();
+      .duration(2500)
+      .moveTowards({ x: newX, y: newY}, {
+        ease: "easeInOutCubic"
+      })
+      .waitUntilFinished().wait(50);
 
     await sequence.play();
+
+    let sequence2 = new Sequence()
+      .animation()
+      .on(ouija_token)
+      .duration(2500)
+      .moveTowards(xyPosition, {
+        ease: "easeInOutCubic"
+      })
+      .waitUntilFinished().wait(200);
+
+    await sequence2.play();    
   }
 
   /* ---------------------------------------------
@@ -186,7 +204,7 @@ export class ouija {
     let sequence = new Sequence()
       .animation()
       .on(ouija_token)
-      .duration(1000)
+      .duration(moveSpeed)
       .moveTowards(xyPosition, {
         ease: "easeInOutCubic"
       })
@@ -194,7 +212,6 @@ export class ouija {
         duration: 1000,
         ease: "easeInOutCubic"
       })
-
       .waitUntilFinished()
       .sound(soundToPlay)
         .volume(sound_volume)
@@ -215,7 +232,7 @@ export class ouija {
     let sequence = new Sequence()
       .animation()
       .on(ouija_token)
-      .duration(1000)
+      .duration(moveSpeed)
       .moveTowards(xyPosition, {
         ease: "easeInOutCubic"
       })
@@ -244,7 +261,7 @@ export class ouija {
     let sequence = new Sequence()
       .animation()
         .on(ouija_token)
-        .duration(1000)
+        .duration(moveSpeed)
         .moveTowards(xyPosition, {
           ease: "easeInOutCubic"
         })

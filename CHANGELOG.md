@@ -1,3 +1,7 @@
+# 0.1.9
+- sound path fix
+- move speed option
+
 # 0.1.8
 - small compendium fix
 - nine custom positions

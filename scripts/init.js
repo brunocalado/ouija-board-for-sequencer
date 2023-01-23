@@ -15,7 +15,7 @@ Hooks.once('init', () => {
     hint: 'This sound is played each movement.',
     scope: 'world',
     config: true,
-    default: 'modules/sequencer/samples/OujiaBoard/assets_sounds_distant-orchestra.ogg',
+    default: 'modules/ouija-board-for-sequencer/assets/sounds/distant-orchestra.ogg',
     type: String,
     filePicker: 'audio'
   });
@@ -41,7 +41,7 @@ Hooks.once('init', () => {
     hint: 'This sound is played when you trigger the move type end.',
     scope: 'world',
     config: true,
-    default: 'modules/sequencer/samples/OujiaBoard/assets_sounds_intensive-stare.ogg',
+    default: 'modules/sequencer/samples/OujiaBoard/assets/sounds/intensive-stare.ogg',
     type: String,
     filePicker: 'audio'
   });
@@ -91,6 +91,16 @@ Hooks.once('init', () => {
     default: 1, 
     type: Number
   });
+  
+  // call this with: game.settings.get("ouija-board-for-sequencer", "move_speed_default")
+  game.settings.register(moduleName, 'move_speed_default', {
+    name: 'Move Speed', // 
+    hint: "This will define the time to make the movement. This will result in control the speed. It's milliseconds (higher number, slow movement.)", 
+    scope: 'world',
+    config: true,
+    default: 1000, 
+    type: Number
+  });  
 
   // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
   game.settings.register(moduleName, 'custom_position_label_1', {
