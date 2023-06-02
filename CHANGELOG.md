@@ -1,3 +1,6 @@
+# 0.2.1
+- manifest fix 
+
 # 0.2.0
 - v11 ONLY
 

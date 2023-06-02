@@ -10,7 +10,7 @@
   
   "flags": {},
   
-  "version": "0.2.0",
+  "version": "0.2.1",
   
   "compatibility": {
     "minimum": 11,
@@ -27,24 +27,21 @@
       "label": "Journal - Ouija Board",
       "path": "packs/journal-ouija-board",
       "type": "JournalEntry",
-      "module": "ouija-board-for-sequencer",
-      "private": true
+      "module": "ouija-board-for-sequencer"
     },
     {
       "name": "macros-ouija-board",
       "label": "Macros - Ouija Board",
       "path": "packs/macros-ouija-board",
       "type": "Macro",
-      "module": "ouija-board-for-sequencer",
-      "private": true
+      "module": "ouija-board-for-sequencer"
     },
     {
       "name": "scene-ouija-board",
       "label": "Scene - Ouija Board",
       "path": "packs/scene-ouija-board",
       "type": "Scene",
-      "module": "ouija-board-for-sequencer",
-      "private": true
+      "module": "ouija-board-for-sequencer"
     }  
   ],
   
