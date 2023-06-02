@@ -1,3 +1,6 @@
+# 0.2.0
+- v11 ONLY
+
 # 0.1.9
 - sound path fix
 - move speed option
