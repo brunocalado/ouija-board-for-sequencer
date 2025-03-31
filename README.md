@@ -16,6 +16,7 @@ There is a compendium with journals with instructions. Read it!
 - You can report bugs, request features at [issues](https://github.com/brunocalado/ouija-board-for-sequencer/issues)
 
 # Acknowledges
+- Piloto de Mouse (Heber Maia)
 - Cefas, GURPS and CSS guy.
 - Erich Matos Viegas
 - Matheus Moreno Mota, half man, half capyvara
