@@ -61,13 +61,20 @@ export class ouija {
     ouija.main();
   */
   static async main(map) {
-    if (canvas.tokens.controlled[0] === undefined) {
-      ui.notifications.error("You must select a token!");
-      return;
+    
+    let tokens = canvas.tokens.placeables.filter(t => t.actor && t.controlled === false); //garante que apenas tokens válidos e não controlados sejam considerados.
+    
+    if (tokens.length > 0) {        
+      ouija_token = tokens[0]; // select the first token in the scene
+    } else if (canvas.tokens.controlled[0] === undefined) {      
+      ui.notifications.error("You must have a token in the scene!");
+      return;    
     } else {
       ouija_token = canvas.tokens.controlled[0];
-      ouija_map = map;
     }
+    
+    ouija_map = map;
+    canvas.tokens.releaseAll(); // unselect the token
     
     const extraTimeMinDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_min_default");
     const extraTimeMaxDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_max_default");

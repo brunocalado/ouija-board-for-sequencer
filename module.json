@@ -10,11 +10,11 @@
   
   "flags": {},
   
-  "version": "0.2.1",
+  "version": "0.2.3",
   
   "compatibility": {
-    "minimum": 11,
-    "verified": "11"
+    "minimum": 12,
+    "verified": "13"
   },
   
   "esmodules": ["/scripts/init.js"],
@@ -43,6 +43,20 @@
       "type": "Scene",
       "module": "ouija-board-for-sequencer"
     }  
+  ],
+
+  "packFolders": [
+    {
+      "name": "Ouija Board for Sequencer",
+      "sorting": "a",
+      "color": "#9f1d1d",
+      "packs": [
+        "journal-ouija-board",
+        "macros-ouija-board",
+        "scene-ouija-board"
+      ],
+      "folders": []
+    }
   ],
   
   "relationships": {

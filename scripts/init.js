@@ -4,7 +4,8 @@ import {ouija} from './ouija.js'
 Hooks.once('init', () => {
   // --------------------------------------------------
   // Load API
-  game.modules.get(moduleName).api = { ouija }; // Request with: const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
+  // Request with: const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
+  game.modules.get(moduleName).api = { ouija }; 
 
   // --------------------------------------------------
   // Module Options

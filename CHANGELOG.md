@@ -1,3 +1,8 @@
+# 0.2.3
+- planchette replacement to make the module working again
+- unselect the token before start to move
+- autoselect the first token in the scene. Does not require you to select the planchette anymore
+
 # 0.2.1
 - manifest fix 
 
