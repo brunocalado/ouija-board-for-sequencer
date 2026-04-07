@@ -1,0 +1,93 @@
+/* ============================================================
+   Ouija Board for Sequencer — Dialog Styles
+   Scoped to .ouija-dialog to prevent global bleed.
+   Applied to DialogV2 content rendered from main_dialog.hbs.
+   ============================================================ */
+
+.ouija-dialog {
+  padding: 4px 0;
+}
+
+/* Solid section containers — replaces the semi-transparent .boxcheckpai */
+.ouija-dialog .ouija-section {
+  border: 1px solid var(--color-border-light-tertiary, #5a5a52);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  background: var(--color-bg-option, #1e1e1e);
+}
+
+/* Uppercase section title — replaces the hardcoded black/beige .titulo bar */
+.ouija-dialog .ouija-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-text-light-heading, #c9c7b8);
+  margin: 0 0 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #5a5a52);
+}
+
+/* Radio button row */
+.ouija-dialog .ouija-radio-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 2px 0 8px;
+}
+
+.ouija-dialog .ouija-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.ouija-dialog .ouija-radio-group input[type="radio"] {
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Full-width textarea */
+.ouija-dialog textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+/* Standard form row */
+.ouija-dialog .form-group {
+  margin-bottom: 6px;
+}
+
+.ouija-dialog .form-group label {
+  white-space: nowrap;
+}
+
+/* Hint text rendered inside a label */
+.ouija-dialog .hint {
+  font-size: 0.75em;
+  opacity: 0.65;
+  font-weight: 400;
+}
+
+/* Side-by-side field pairs (Delay Min / Delay Max) */
+.ouija-dialog .ouija-row {
+  display: flex;
+  gap: 12px;
+}
+
+.ouija-dialog .ouija-row .form-group {
+  flex: 1;
+}
+
+.ouija-dialog select,
+.ouija-dialog input[type="number"] {
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}

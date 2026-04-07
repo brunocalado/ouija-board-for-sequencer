@@ -36,12 +36,13 @@ export class ouija {
         <textarea id="moduleTextArea" rows="3" cols="33">${finalCode}</textarea>
       `;
 
-      let dialog = new Dialog({
-        title: `Token Data`,
+      await foundry.applications.api.DialogV2.wait({
+        window: { title: "Token Data" },
         content: form,
-        buttons: {
-          use: {
+        buttons: [
+          {
             label: "Copy to Clipboard",
+            action: "copy",
             callback: () => {
               let copyText = document.getElementById("moduleTextArea"); /* Get the text field */
               copyText.select(); /* Select the text field */
@@ -49,8 +50,8 @@ export class ouija {
               ui.notifications.notify(`Saved on Clipboard`); /* Alert the copied text */
             }
           }
-        }
-      }).render(true);
+        ]
+      });
     }
 
   }
@@ -101,34 +102,36 @@ export class ouija {
       customPositionLabel9: customPositionLabel9
     };
 
-    const template = await renderTemplate(`modules/ouija-board-for-sequencer/templates/main_dialog.html`, templateData);
+    const template = await foundry.applications.handlebars.renderTemplate(`modules/ouija-board-for-sequencer/templates/main_dialog.hbs`, templateData);
 
-    new Dialog({
-      title: `Ouija`,
+    await foundry.applications.api.DialogV2.wait({
+      window: { title: "Ouija" },
       content: template,
-      buttons: {
-        ok: {
+      buttons: [
+        {
           label: "Move",
-          callback: async (html) => {
-            this.moveThing(html);
-          },
+          action: "ok",
+          callback: async (event, button, dialog) => {
+            await this.moveThing(dialog.element);
+          }
         },
-        cancel: {
+        {
           label: "Cancel",
+          action: "cancel"
         }
-      }
-    }).render(true);
+      ]
+    });
   }
 
   static async moveThing(html) {
     let msg = '';
-    const messageType = html.find('input[name="extra_position"]:checked')[0].value; // message, position_yes, position_no
-    const autoMessage = html.find("#message")[0].value;
-    extraTimeMin = parseInt( html.find("#extraTimeMin")[0].value );
-    extraTimeMax = parseInt( html.find("#extraTimeMax")[0].value );
-    moveSpeed = parseInt( html.find("#moveSpeed")[0].value );
-    const moveType = html.find('#movetype')[0].value; // Standard, No Sound/No Animation, Animation at End
-    const customPosition = html.find('#custom_position')[0].value; // custom_position_choose, position_01, ..., position_06
+    const messageType = html.querySelector('input[name="extra_position"]:checked').value; // message, position_yes, position_no
+    const autoMessage = html.querySelector("#message").value;
+    extraTimeMin = parseInt( html.querySelector("#extraTimeMin").value );
+    extraTimeMax = parseInt( html.querySelector("#extraTimeMax").value );
+    moveSpeed = parseInt( html.querySelector("#moveSpeed").value );
+    const moveType = html.querySelector('#movetype').value; // Standard, No Sound/No Animation, Animation at End
+    const customPosition = html.querySelector('#custom_position').value; // custom_position_choose, position_01, ..., position_06
 
     if (messageType=='message' && customPosition=='custom_position_choose' ) { // Message
       this.sendMessage(autoMessage.toLowerCase(), moveType);

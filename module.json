@@ -10,35 +10,35 @@
   
   "flags": {},
   
-  "version": "0.2.3",
+  "version": "0.2.4",
   
   "compatibility": {
-    "minimum": 12,
-    "verified": "13"
+    "minimum": 13,
+    "verified": 13
   },
   
   "esmodules": ["/scripts/init.js"],
-  "styles": [],
+  "styles": ["styles/ouija.css"],
   "languages": [],
 
   "packs": [
     {
       "name": "journal-ouija-board",
-      "label": "Journal - Ouija Board",
+      "label": "Journal",
       "path": "packs/journal-ouija-board",
       "type": "JournalEntry",
       "module": "ouija-board-for-sequencer"
     },
     {
       "name": "macros-ouija-board",
-      "label": "Macros - Ouija Board",
+      "label": "Macros",
       "path": "packs/macros-ouija-board",
       "type": "Macro",
       "module": "ouija-board-for-sequencer"
     },
     {
       "name": "scene-ouija-board",
-      "label": "Scene - Ouija Board",
+      "label": "Scene",
       "path": "packs/scene-ouija-board",
       "type": "Scene",
       "module": "ouija-board-for-sequencer"
@@ -67,8 +67,6 @@
     }]
   },
   
-  "socket": false,
- 
   "url": "https://github.com/brunocalado/ouija-board-for-sequencer", 
   "manifest": "https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/module.json",
   "download": "https://codeload.github.com/brunocalado/ouija-board-for-sequencer/zip/main"

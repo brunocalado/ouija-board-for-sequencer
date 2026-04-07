@@ -1,3 +1,9 @@
+# 0.2.4
+
+- [Changed] Renamed `main_dialog.html` template to `main_dialog.hbs`
+- [Added] Extracted all dialog CSS into `styles/ouija.css` and registered it in `module.json`
+- [Changed] Redesigned dialog UI: solid section backgrounds, uppercase headers with border separators, clean flex layout for radio buttons, side-by-side Delay Min/Max fields
+
 # 0.2.3
 - planchette replacement to make the module working again
 - unselect the token before start to move
