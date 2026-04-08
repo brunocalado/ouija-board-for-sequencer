@@ -1,15 +1,5 @@
-2025/03/31-08:51:09.670 4c4 Recovering log #280
-2025/03/31-08:51:09.674 4c4 Delete type=0 #280
-2025/03/31-08:51:09.674 4c4 Delete type=3 #279
-2025/03/31-09:34:02.523 528c Level-0 table #284: started
-2025/03/31-09:34:02.523 528c Level-0 table #284: 1835 bytes OK
-2025/03/31-09:34:02.525 528c Delete type=0 #282
-2025/03/31-09:34:02.534 528c Manual compaction at level-0 from '!journal!PdIcUhbKdGWmVOvt' @ 72057594037927935 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at (end)
-2025/03/31-09:34:02.537 528c Manual compaction at level-1 from '!journal!PdIcUhbKdGWmVOvt' @ 72057594037927935 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at '!journal.pages!PdIcUhbKdGWmVOvt.B8YtxgWFcsn79qLg' @ 9 : 1
-2025/03/31-09:34:02.537 528c Compacting 1@1 + 1@2 files
-2025/03/31-09:34:02.538 528c Generated table #285@1: 4 keys, 3973 bytes
-2025/03/31-09:34:02.538 528c Compacted 1@1 + 1@2 files => 3973 bytes
-2025/03/31-09:34:02.538 528c compacted to: files[ 0 0 1 0 0 0 0 ]
-2025/03/31-09:34:02.538 528c Delete type=2 #148
-2025/03/31-09:34:02.538 528c Delete type=2 #284
-2025/03/31-09:34:02.545 528c Manual compaction at level-1 from '!journal.pages!PdIcUhbKdGWmVOvt.B8YtxgWFcsn79qLg' @ 9 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at (end)
+2026/04/08-14:07:25.400 49a4 Log #288: 0 ops saved to Table #289 OK
+2026/04/08-14:07:25.401 49a4 Archiving C:\Users\Bruno\Documents\VTT\fvttdev\Data\modules\ouija-board-for-sequencer\packs\journal-ouija-board/000288.log: OK
+2026/04/08-14:07:25.401 49a4 Table #285: 4 entries OK
+2026/04/08-14:07:25.403 49a4 Archiving C:\Users\Bruno\Documents\VTT\fvttdev\Data\modules\ouija-board-for-sequencer\packs\journal-ouija-board/MANIFEST-000286: OK
+2026/04/08-14:07:25.408 49a4 **** Repaired leveldb C:\Users\Bruno\Documents\VTT\fvttdev\Data\modules\ouija-board-for-sequencer\packs\journal-ouija-board; recovered 1 files; 3973 bytes. Some data may have been lost. ****

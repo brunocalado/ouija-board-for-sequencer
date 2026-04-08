@@ -3,7 +3,60 @@ let ouija_token;
 let extraTimeMin=1;
 let extraTimeMax=1;
 let moveSpeed=1000;
-      
+
+/** Single source of truth for the default board coordinate map. */
+export const DEFAULT_MAP = {
+  letter_a: { x: 287, y: 503 },
+  letter_b: { x: 351, y: 462 },
+  letter_c: { x: 412, y: 437 },
+  letter_d: { x: 469, y: 417 },
+  letter_e: { x: 528, y: 402 },
+  letter_f: { x: 588, y: 391 },
+  letter_g: { x: 648, y: 387 },
+  letter_h: { x: 716, y: 389 },
+  letter_i: { x: 773, y: 391 },
+  letter_j: { x: 822, y: 398 },
+  letter_k: { x: 886, y: 412 },
+  letter_l: { x: 947, y: 433 },
+  letter_m: { x: 1016, y: 462 },
+  letter_n: { x: 1092, y: 503 },
+  letter_o: { x: 317, y: 580 },
+  letter_p: { x: 372, y: 550 },
+  letter_q: { x: 434, y: 526 },
+  letter_r: { x: 499, y: 504 },
+  letter_s: { x: 563, y: 486 },
+  letter_t: { x: 623, y: 474 },
+  letter_u: { x: 687, y: 473 },
+  letter_v: { x: 760, y: 475 },
+  letter_w: { x: 845, y: 493 },
+  letter_x: { x: 923, y: 520 },
+  letter_y: { x: 991, y: 544 },
+  letter_z: { x: 1047, y: 581 },
+  number_1: { x: 399, y: 654 },
+  number_2: { x: 451, y: 655 },
+  number_3: { x: 514, y: 655 },
+  number_4: { x: 578, y: 655 },
+  number_5: { x: 642, y: 651 },
+  number_6: { x: 706, y: 653 },
+  number_7: { x: 765, y: 650 },
+  number_8: { x: 824, y: 654 },
+  number_9: { x: 883, y: 655 },
+  number_0: { x: 955, y: 655 },
+  symbol_yes: { x: 383, y: 287 },
+  symbol_no: { x: 993, y: 283 },
+  symbol_space: { x: 679, y: 284 },
+  symbol_01: { x: 681, y: 753 },
+  symbol_02: { x: 249, y: 260 },
+  symbol_03: { x: 215, y: 326 },
+  symbol_04: { x: 1128, y: 254 },
+  symbol_05: { x: 1162, y: 326 },
+  symbol_06: { x: 1216, y: 54 },
+  symbol_07: { x: 1494, y: 54 },
+  symbol_08: { x: 1434, y: 579 },
+  symbol_09: { x: 71, y: 928 },
+  bottomLocation: { x: 607.1601354620223, y: 785.2926947266571 }
+};
+
 // const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
 export class ouija {
 
@@ -61,19 +114,28 @@ export class ouija {
     const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
     ouija.main();
   */
-  static async main(map) {
-    
-    let tokens = canvas.tokens.placeables.filter(t => t.actor && t.controlled === false); //garante que apenas tokens válidos e não controlados sejam considerados.
-    
-    if (tokens.length > 0) {        
-      ouija_token = tokens[0]; // select the first token in the scene
-    } else if (canvas.tokens.controlled[0] === undefined) {      
+  /**
+   * Main entry point for the Ouija board dialog.
+   * @param {Object|null} map - Optional board coordinate map. If omitted, reads from settings.
+   */
+  static async main(map = null) {
+    // If no map passed, read from settings
+    if (!map) {
+      map = this._parseMap();
+      if (!map) return;
+    }
+
+    let tokens = canvas.tokens.placeables.filter(t => t.actor && t.controlled === false);
+
+    if (tokens.length > 0) {
+      ouija_token = tokens[0];
+    } else if (canvas.tokens.controlled[0] === undefined) {
       ui.notifications.error("You must have a token in the scene!");
-      return;    
+      return;
     } else {
       ouija_token = canvas.tokens.controlled[0];
     }
-    
+
     ouija_map = map;
     canvas.tokens.releaseAll(); // unselect the token
     
@@ -419,6 +481,86 @@ export class ouija {
       "Playing with spirits may bring you dire consequences."
     ];
     return messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  /**
+   * Parse the map JSON string from the module setting.
+   * Shows a user-visible error and returns null on invalid JSON.
+   * @returns {Object|null} The parsed map object or null on failure.
+   */
+  static _parseMap() {
+    const raw = game.settings.get("ouija-board-for-sequencer", "map_data");
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      ui.notifications.error("Ouija Board: Map JSON is invalid. Open Module Settings → Edit Map to fix it.");
+      console.error("ouija-board-for-sequencer | map_data parse error:", e);
+      return null;
+    }
+  }
+
+  /**
+   * Simplified public entry point for macros.
+   * Reads the map from settings and opens the control dialog.
+   * Usage: Ouija.control()
+   */
+  static async control() {
+    const map = this._parseMap();
+    if (!map) return;
+    await this.main(map);
+  }
+
+  /**
+   * Opens the Map Editor dialog for editing the board coordinate map JSON.
+   * Triggered from the injected button in the module settings UI.
+   */
+  static async openMapEditor() {
+    const currentJson = game.settings.get("ouija-board-for-sequencer", "map_data");
+
+    const template = await foundry.applications.handlebars.renderTemplate(
+      "modules/ouija-board-for-sequencer/templates/map-editor.hbs",
+      { mapJson: currentJson }
+    );
+
+    await foundry.applications.api.DialogV2.wait({
+      window: { title: "Ouija Board — Map Editor" },
+      content: template,
+      buttons: [
+        {
+          label: "Save",
+          action: "save",
+          callback: async (event, button, dialog) => {
+            const textarea = dialog.element.querySelector("#ouija-map-json");
+            const raw = textarea.value.trim();
+            try {
+              JSON.parse(raw);
+            } catch (e) {
+              ui.notifications.error("Invalid JSON. Map was NOT saved. Fix the syntax and try again.");
+              return false;
+            }
+            await game.settings.set("ouija-board-for-sequencer", "map_data", raw);
+            ui.notifications.notify("Ouija Board: Map saved successfully.");
+          }
+        },
+        {
+          label: "Reset to Default",
+          action: "reset",
+          callback: async (event, button, dialog) => {
+            const defaultJson = JSON.stringify(DEFAULT_MAP, null, 2);
+            await game.settings.set("ouija-board-for-sequencer", "map_data", defaultJson);
+            ui.notifications.notify("Ouija Board: Map reset to default.");
+            const textarea = dialog.element.querySelector("#ouija-map-json");
+            if (textarea) textarea.value = defaultJson;
+            return false;
+          }
+        },
+        {
+          label: "Cancel",
+          action: "cancel"
+        }
+      ],
+      rejectClose: false
+    });
   }
 
 } // CLASS END

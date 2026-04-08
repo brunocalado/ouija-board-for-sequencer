@@ -1,3 +1,10 @@
+# 0.2.6
+
+- [Added] Board coordinate map stored in module settings with default map pre-loaded
+- [Added] Map Editor button in module settings to edit/save/reset the coordinate map JSON
+- [Added] Simplified macro API: `Ouija.control()` — no map argument or module lookup needed
+- [Changed] `ouija.main()` now accepts an optional map parameter; reads from settings when omitted
+
 # 0.2.5
 
 - [Fixed] Replaced Sequencer `.animation().moveTowards()` with v13 native `TokenDocument#move()` to eliminate `DatabaseUpdateOperation#teleport` deprecation warning

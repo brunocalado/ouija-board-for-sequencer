@@ -1,5 +1,5 @@
 const moduleName = 'ouija-board-for-sequencer';
-import {ouija} from './ouija.js'
+import { ouija, DEFAULT_MAP } from './ouija.js';
 
 Hooks.once('init', () => {
   // --------------------------------------------------
@@ -183,6 +183,52 @@ Hooks.once('init', () => {
     config: true,
     default: 'Crystal',
     type: String
-  });   
+  });
+
+  // Stored as JSON string. config: false hides it from the raw settings UI.
+  // Accessed via the Map Editor button instead.
+  game.settings.register(moduleName, 'map_data', {
+    name: 'Map Data',
+    hint: 'JSON map of board positions. Edit via the Map Editor button in module settings.',
+    scope: 'world',
+    config: false,
+    default: JSON.stringify(DEFAULT_MAP, null, 2),
+    type: String
+  });
+
+  // Expose simplified global for macros: Ouija.control()
+  globalThis.Ouija = { control: () => ouija.control() };
+});
+
+/**
+ * Injects the Map Editor button into the module's settings section.
+ * Triggered by the renderSettingsConfig hook in the AppV2 settings lifecycle.
+ */
+Hooks.on('renderSettingsConfig', (app, html) => {
+  const moduleSection = html.querySelector(`[data-category="${moduleName}"]`);
+  if (!moduleSection) return;
+
+  const buttonDiv = document.createElement('div');
+  buttonDiv.classList.add('form-group');
+  buttonDiv.innerHTML = `
+    <label>Board Map</label>
+    <div class="form-fields">
+      <button type="button" id="ouija-open-map-editor">
+        <i class="fas fa-map-marker-alt"></i> Edit Map
+      </button>
+    </div>
+    <p class="notes">Edit the coordinate map for your Ouija board scene.</p>
+  `;
+
+  const firstGroup = moduleSection.querySelector('.form-group');
+  if (firstGroup) {
+    moduleSection.insertBefore(buttonDiv, firstGroup);
+  } else {
+    moduleSection.appendChild(buttonDiv);
+  }
+
+  buttonDiv.querySelector('#ouija-open-map-editor').addEventListener('click', () => {
+    ouija.openMapEditor();
+  });
 });
 
