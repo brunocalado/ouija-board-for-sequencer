@@ -15,33 +15,33 @@ Hooks.once('init', () => {
     name: 'Move Sound',
     hint: 'This sound is played each movement.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'modules/ouija-board-for-sequencer/assets/sounds/distant-orchestra.ogg',
     type: String,
     filePicker: 'audio'
   });
-  
+
   // call this with: game.settings.get("ouija-board-for-sequencer", "move_sound_volume")
   game.settings.register(moduleName, 'move_sound_volume', {
     name: 'Move Sound Volume', // "Warning Sound Volume"
     hint: 'You can set the volume for the move sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.', // "You can set the volume for the warning sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume."
     scope: 'world',
-    config: true,
+    config: false,
     default: 0.8,
     range: {
         min: 0,
         max: 1,
         step: 0.1
-    },     
+    },
     type: Number
   });
-  
+
   // call this with: game.settings.get("ouija-board-for-sequencer", "end_move_sound");
   game.settings.register(moduleName, 'end_move_sound', {
     name: 'End Move Sound',
     hint: 'This sound is played when you trigger the move type end.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'modules/sequencer/samples/OujiaBoard/assets/sounds/intensive-stare.ogg',
     type: String,
     filePicker: 'audio'
@@ -52,22 +52,22 @@ Hooks.once('init', () => {
     name: 'End Move Sound Volume', // "Warning Sound Volume"
     hint: 'You can set the volume for the move sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.', // "You can set the volume for the warning sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume."
     scope: 'world',
-    config: true,
+    config: false,
     default: 0.9,
     range: {
         min: 0,
         max: 1,
         step: 0.1
-    },     
+    },
     type: Number
   });
-  
+
   // call this with: game.settings.get("ouija-board-for-sequencer", "end_animation");
   game.settings.register(moduleName, 'end_animation', {
     name: 'End Animation',
     hint: 'This animation will happen at the end of the movement.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'modules/ouija-board-for-sequencer/assets/animation/TollTheDeadSkullSmoke_01_Regular_Grey_400x400.webm',
     type: String,
     filePicker: 'imagevideo'
@@ -232,13 +232,27 @@ Hooks.on('renderSettingsConfig', (app, html) => {
     <p class="hint">Set display labels for the 9 custom positions (max 30 characters each).</p>
   `;
 
+  const soundButtonDiv = document.createElement('div');
+  soundButtonDiv.classList.add('form-group');
+  soundButtonDiv.innerHTML = `
+    <label>Sound &amp; Animation</label>
+    <div class="form-fields">
+      <button type="button" id="ouija-open-sound-editor">
+        <i class="fas fa-volume-up"></i> Edit Sound &amp; Animation
+      </button>
+    </div>
+    <p class="hint">Configure movement sounds and end animation.</p>
+  `;
+
   const firstGroup = moduleSection.querySelector('.form-group');
   if (firstGroup) {
+    moduleSection.insertBefore(soundButtonDiv, firstGroup);
     moduleSection.insertBefore(labelButtonDiv, firstGroup);
     moduleSection.insertBefore(mapButtonDiv, firstGroup);
   } else {
     moduleSection.appendChild(mapButtonDiv);
     moduleSection.appendChild(labelButtonDiv);
+    moduleSection.appendChild(soundButtonDiv);
   }
 
   mapButtonDiv.querySelector('#ouija-open-map-editor').addEventListener('click', () => {
@@ -247,6 +261,10 @@ Hooks.on('renderSettingsConfig', (app, html) => {
 
   labelButtonDiv.querySelector('#ouija-open-label-editor').addEventListener('click', () => {
     ouija.openLabelEditor();
+  });
+
+  soundButtonDiv.querySelector('#ouija-open-sound-editor').addEventListener('click', () => {
+    ouija.openSoundEditor();
   });
 });
 

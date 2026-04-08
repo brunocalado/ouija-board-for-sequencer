@@ -627,4 +627,82 @@ export class ouija {
     });
   }
 
+  /**
+   * Opens the Sound & Animation Editor dialog.
+   * Triggered from the injected button in the module settings UI.
+   */
+  static async openSoundEditor() {
+    const ns = "ouija-board-for-sequencer";
+
+    const templateData = {
+      moveSoundPath:    game.settings.get(ns, "move_sound"),
+      moveSoundVolume:  game.settings.get(ns, "move_sound_volume"),
+      endSoundPath:     game.settings.get(ns, "end_move_sound"),
+      endSoundVolume:   game.settings.get(ns, "end_move_sound_volume"),
+      endAnimationPath: game.settings.get(ns, "end_animation"),
+    };
+
+    const template = await foundry.applications.handlebars.renderTemplate(
+      "modules/ouija-board-for-sequencer/templates/sound-editor.hbs",
+      templateData
+    );
+
+    await foundry.applications.api.DialogV2.wait({
+      window: { title: "Ouija Board — Sound & Animation" },
+      content: template,
+      render: (event, app) => {
+        // app is the DialogV2 instance; app.element is the root HTMLElement
+        const el = app.element;
+
+        // Wire up range slider live display updates
+        for (const [rangeId, displayId] of [
+          ["ouija-volume-move", "ouija-volume-move-display"],
+          ["ouija-volume-end",  "ouija-volume-end-display"],
+        ]) {
+          const range = el.querySelector(`#${rangeId}`);
+          const display = el.querySelector(`#${displayId}`);
+          if (range && display) {
+            range.addEventListener("input", () => { display.textContent = range.value; });
+          }
+        }
+
+        // Wire up FilePicker buttons — reads data-target and data-type to avoid hardcoding per button
+        el.querySelectorAll(".ouija-browse-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const targetId = btn.dataset.target;
+            const pickerType = btn.dataset.type; // "audio" or "imagevideo"
+            const targetInput = el.querySelector(`#${targetId}`);
+            if (!targetInput) return;
+
+            new FilePicker({
+              type: pickerType,
+              current: targetInput.value,
+              callback: (path) => { targetInput.value = path; }
+            }).browse();
+          });
+        });
+      },
+      buttons: [
+        {
+          label: "Save",
+          action: "save",
+          callback: async (event, button, dialog) => {
+            const el = dialog.element;
+            await game.settings.set(ns, "move_sound",            el.querySelector("#ouija-sound-move").value.trim());
+            await game.settings.set(ns, "move_sound_volume",     Math.round(Number(el.querySelector("#ouija-volume-move").value) * 10) / 10);
+            await game.settings.set(ns, "end_move_sound",        el.querySelector("#ouija-sound-end").value.trim());
+            await game.settings.set(ns, "end_move_sound_volume", Math.round(Number(el.querySelector("#ouija-volume-end").value) * 10) / 10);
+            await game.settings.set(ns, "end_animation",         el.querySelector("#ouija-animation-end").value.trim());
+            ui.notifications.notify("Ouija Board: Sound & Animation settings saved.");
+          }
+        },
+        {
+          label: "Cancel",
+          action: "cancel"
+        }
+      ],
+      rejectClose: false
+    });
+  }
+
 } // CLASS END
