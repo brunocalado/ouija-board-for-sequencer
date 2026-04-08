@@ -125,15 +125,17 @@ export class ouija {
       if (!map) return;
     }
 
-    let tokens = canvas.tokens.placeables.filter(t => t.actor && t.controlled === false);
-
-    if (tokens.length > 0) {
-      ouija_token = tokens[0];
-    } else if (canvas.tokens.controlled[0] === undefined) {
-      ui.notifications.error("You must have a token in the scene!");
-      return;
-    } else {
+    if (canvas.tokens.controlled.length > 0) {
+      // Priority 1: use the token the user has selected
       ouija_token = canvas.tokens.controlled[0];
+    } else {
+      // Priority 2: fall back to the first token in the scene that has an actor
+      const fallback = canvas.tokens.placeables.find(t => t.actor);
+      if (!fallback) {
+        ui.notifications.error("You must have a token in the scene!");
+        return;
+      }
+      ouija_token = fallback;
     }
 
     ouija_map = map;
@@ -502,9 +504,9 @@ export class ouija {
   /**
    * Simplified public entry point for macros.
    * Reads the map from settings and opens the control dialog.
-   * Usage: Ouija.control()
+   * Usage: Ouija.Control()
    */
-  static async control() {
+  static async Control() {
     const map = this._parseMap();
     if (!map) return;
     await this.main(map);

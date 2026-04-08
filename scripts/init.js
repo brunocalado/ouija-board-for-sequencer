@@ -196,8 +196,8 @@ Hooks.once('init', () => {
     type: String
   });
 
-  // Expose simplified global for macros: Ouija.control()
-  globalThis.Ouija = { control: () => ouija.control() };
+  // Expose simplified global for macros: Ouija.Control()
+  globalThis.Ouija = { Control: () => ouija.Control() };
 });
 
 /**
@@ -217,7 +217,7 @@ Hooks.on('renderSettingsConfig', (app, html) => {
         <i class="fas fa-map-marker-alt"></i> Edit Map
       </button>
     </div>
-    <p class="notes">Edit the coordinate map for your Ouija board scene.</p>
+    <p class="hint">Edit the coordinate map for your Ouija board scene.</p>
   `;
 
   const firstGroup = moduleSection.querySelector('.form-group');
