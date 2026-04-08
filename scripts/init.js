@@ -108,7 +108,7 @@ Hooks.once('init', () => {
     name: 'Custom Position Label - 1',
     hint: 'This will change the label for the Custom Position 1.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Good Bye',
     type: String
   });
@@ -117,7 +117,7 @@ Hooks.once('init', () => {
     name: 'Custom Position Label - 2',
     hint: 'This will change the label for the Custom Position 2.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Left Skull',
     type: String
   });
@@ -126,7 +126,7 @@ Hooks.once('init', () => {
     name: 'Custom Position Label - 3',
     hint: 'This will change the label for the Custom Position 3.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Sun',
     type: String
   });
@@ -135,7 +135,7 @@ Hooks.once('init', () => {
     name: 'Custom Position Label - 4',
     hint: 'This will change the label for the Custom Position 4.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Right Skull',
     type: String
   });
@@ -144,7 +144,7 @@ Hooks.once('init', () => {
     name: 'Custom Position Label - 5',
     hint: 'This will change the label for the Custom Position 5.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Moon',
     type: String
   });
@@ -153,34 +153,34 @@ Hooks.once('init', () => {
     name: 'Custom Position Label - 6',
     hint: 'This will change the label for the Custom Position 6.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'First Candle',
     type: String
-  });  
+  });
   // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_7");
   game.settings.register(moduleName, 'custom_position_label_7', {
     name: 'Custom Position Label - 7',
     hint: 'This will change the label for the Custom Position 7.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Second Candle',
     type: String
-  }); 
+  });
   // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_8");
   game.settings.register(moduleName, 'custom_position_label_8', {
     name: 'Custom Position Label - 8',
     hint: 'This will change the label for the Custom Position 8.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Key',
     type: String
-  }); 
+  });
   // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_9");
   game.settings.register(moduleName, 'custom_position_label_9', {
     name: 'Custom Position Label - 9',
     hint: 'This will change the label for the Custom Position 9.',
     scope: 'world',
-    config: true,
+    config: false,
     default: 'Crystal',
     type: String
   });
@@ -201,16 +201,16 @@ Hooks.once('init', () => {
 });
 
 /**
- * Injects the Map Editor button into the module's settings section.
+ * Injects the Map Editor and Label Editor buttons into the module's settings section.
  * Triggered by the renderSettingsConfig hook in the AppV2 settings lifecycle.
  */
 Hooks.on('renderSettingsConfig', (app, html) => {
   const moduleSection = html.querySelector(`[data-category="${moduleName}"]`);
   if (!moduleSection) return;
 
-  const buttonDiv = document.createElement('div');
-  buttonDiv.classList.add('form-group');
-  buttonDiv.innerHTML = `
+  const mapButtonDiv = document.createElement('div');
+  mapButtonDiv.classList.add('form-group');
+  mapButtonDiv.innerHTML = `
     <label>Board Map</label>
     <div class="form-fields">
       <button type="button" id="ouija-open-map-editor">
@@ -220,15 +220,33 @@ Hooks.on('renderSettingsConfig', (app, html) => {
     <p class="hint">Edit the coordinate map for your Ouija board scene.</p>
   `;
 
+  const labelButtonDiv = document.createElement('div');
+  labelButtonDiv.classList.add('form-group');
+  labelButtonDiv.innerHTML = `
+    <label>Custom Position Labels</label>
+    <div class="form-fields">
+      <button type="button" id="ouija-open-label-editor">
+        <i class="fas fa-tag"></i> Edit Labels
+      </button>
+    </div>
+    <p class="hint">Set display labels for the 9 custom positions (max 30 characters each).</p>
+  `;
+
   const firstGroup = moduleSection.querySelector('.form-group');
   if (firstGroup) {
-    moduleSection.insertBefore(buttonDiv, firstGroup);
+    moduleSection.insertBefore(labelButtonDiv, firstGroup);
+    moduleSection.insertBefore(mapButtonDiv, firstGroup);
   } else {
-    moduleSection.appendChild(buttonDiv);
+    moduleSection.appendChild(mapButtonDiv);
+    moduleSection.appendChild(labelButtonDiv);
   }
 
-  buttonDiv.querySelector('#ouija-open-map-editor').addEventListener('click', () => {
+  mapButtonDiv.querySelector('#ouija-open-map-editor').addEventListener('click', () => {
     ouija.openMapEditor();
+  });
+
+  labelButtonDiv.querySelector('#ouija-open-label-editor').addEventListener('click', () => {
+    ouija.openLabelEditor();
   });
 });
 

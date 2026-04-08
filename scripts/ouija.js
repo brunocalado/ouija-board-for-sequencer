@@ -130,7 +130,7 @@ export class ouija {
       ouija_token = canvas.tokens.controlled[0];
     } else {
       // Priority 2: fall back to the first token in the scene that has an actor
-      const fallback = canvas.tokens.placeables.find(t => t.actor);
+      const fallback = canvas.tokens.placeables[0];
       if (!fallback) {
         ui.notifications.error("You must have a token in the scene!");
         return;
@@ -517,7 +517,13 @@ export class ouija {
    * Triggered from the injected button in the module settings UI.
    */
   static async openMapEditor() {
-    const currentJson = game.settings.get("ouija-board-for-sequencer", "map_data");
+    let currentJson;
+    try {
+      currentJson = JSON.stringify(JSON.parse(game.settings.get("ouija-board-for-sequencer", "map_data")), null, 2);
+    } catch (e) {
+      // Preserve raw value so a syntax error remains visible to the user for manual correction
+      currentJson = game.settings.get("ouija-board-for-sequencer", "map_data");
+    }
 
     const template = await foundry.applications.handlebars.renderTemplate(
       "modules/ouija-board-for-sequencer/templates/map-editor.hbs",
@@ -534,13 +540,15 @@ export class ouija {
           callback: async (event, button, dialog) => {
             const textarea = dialog.element.querySelector("#ouija-map-json");
             const raw = textarea.value.trim();
+            let parsed;
             try {
-              JSON.parse(raw);
+              parsed = JSON.parse(raw);
             } catch (e) {
               ui.notifications.error("Invalid JSON. Map was NOT saved. Fix the syntax and try again.");
               return false;
             }
-            await game.settings.set("ouija-board-for-sequencer", "map_data", raw);
+            const normalizedJson = JSON.stringify(parsed, null, 2);
+            await game.settings.set("ouija-board-for-sequencer", "map_data", normalizedJson);
             ui.notifications.notify("Ouija Board: Map saved successfully.");
           }
         },
@@ -554,6 +562,60 @@ export class ouija {
             const textarea = dialog.element.querySelector("#ouija-map-json");
             if (textarea) textarea.value = defaultJson;
             return false;
+          }
+        },
+        {
+          label: "Cancel",
+          action: "cancel"
+        }
+      ],
+      rejectClose: false
+    });
+  }
+
+  /**
+   * Opens the Label Editor dialog for editing the 9 custom position labels.
+   * Triggered from the injected button in the module settings UI.
+   */
+  static async openLabelEditor() {
+    const keys = [
+      'custom_position_label_1',
+      'custom_position_label_2',
+      'custom_position_label_3',
+      'custom_position_label_4',
+      'custom_position_label_5',
+      'custom_position_label_6',
+      'custom_position_label_7',
+      'custom_position_label_8',
+      'custom_position_label_9',
+    ];
+
+    const labels = keys.map((key, i) => ({
+      number: i + 1,
+      value: game.settings.get("ouija-board-for-sequencer", key)
+    }));
+
+    const template = await foundry.applications.handlebars.renderTemplate(
+      "modules/ouija-board-for-sequencer/templates/label-editor.hbs",
+      { labels }
+    );
+
+    await foundry.applications.api.DialogV2.wait({
+      window: { title: "Ouija Board — Label Editor" },
+      content: template,
+      buttons: [
+        {
+          label: "Save",
+          action: "save",
+          callback: async (event, button, dialog) => {
+            for (let i = 0; i < keys.length; i++) {
+              const input = dialog.element.querySelector(`#ouija-label-${i}`);
+              if (!input) continue;
+              // slice enforces the 30-char limit server-side in case this is called programmatically
+              const val = input.value.trim().slice(0, 30);
+              await game.settings.set("ouija-board-for-sequencer", keys[i], val);
+            }
+            ui.notifications.notify("Ouija Board: Labels saved successfully.");
           }
         },
         {
