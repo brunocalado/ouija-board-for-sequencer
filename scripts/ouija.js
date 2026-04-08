@@ -169,60 +169,62 @@ export class ouija {
     }    
   }
   
-  // Move the planchette slightly when new letter is the same as old letter.
-  // This way, it's obvious that a new letter is being selected.
+  /**
+   * Move the planchette slightly off-center and back when the new letter
+   * matches the previous one, so the player sees a distinct "press" motion.
+   * Called from sendMessage when consecutive identical characters are detected.
+   * @param {string} letter - The repeated letter/position key
+   */
   static async jiggle(letter) {
     const xyPosition = this.sceneMap(letter);
-    let newX = xyPosition.x;
-    newX -= 15;
-    let newY = xyPosition.y;
-    newY -= 25;
+    const jiggleX = xyPosition.x - 15;
+    const jiggleY = xyPosition.y - 25;
 
-    let sequence = new Sequence()
-      .animation()
-      .on(ouija_token)
-      .duration(2500)
-      .moveTowards({ x: newX, y: newY}, {
-        ease: "easeInOutCubic"
-      })
-      .waitUntilFinished().wait(50);
+    // Move slightly off-center using v13 native movement API
+    await ouija_token.document.move(
+      [{ x: jiggleX, y: jiggleY }],
+      { animate: true }
+    );
 
-    await sequence.play();
+    await new Promise(resolve => setTimeout(resolve, 250));
 
-    let sequence2 = new Sequence()
-      .animation()
-      .on(ouija_token)
-      .duration(2500)
-      .moveTowards(xyPosition, {
-        ease: "easeInOutCubic"
-      })
-      .waitUntilFinished().wait(200);
+    // Move back to exact letter position
+    await ouija_token.document.move(
+      [{ x: xyPosition.x, y: xyPosition.y }],
+      { animate: true }
+    );
 
-    await sequence2.play();    
+    await new Promise(resolve => setTimeout(resolve, 200));
   }
 
-  /* ---------------------------------------------
-  // movePattern1: 
-    const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-    ouija.movePattern1(position, extraTime);
-  */
-  static async movePattern1(position) {    
+  /**
+   * Standard movement pattern: move token, rotate toward bottom, play sound.
+   * Uses v13 TokenDocument#move() to avoid deprecated teleport flag.
+   * @param {string} position - The target letter/position key
+   */
+  static async movePattern1(position) {
     const soundToPlay = game.settings.get("ouija-board-for-sequencer", "move_sound");
-    const sound_volume = game.settings.get("ouija-board-for-sequencer", "move_sound_volume")
+    const sound_volume = game.settings.get("ouija-board-for-sequencer", "move_sound_volume");
     const xyPosition = this.sceneMap(position);
-    
+
+    // Calculate rotation toward bottomLocation using the namespaced Ray
+    const ray = new foundry.canvas.geometry.Ray(
+      { x: ouija_token.x, y: ouija_token.y },
+      ouija_map.bottomLocation
+    );
+    const rotationDeg = Math.toDegrees(ray.angle);
+
+    // Move token using the v13 native API (avoids teleport deprecation)
+    await ouija_token.document.move(
+      [{ x: xyPosition.x, y: xyPosition.y }],
+      { animate: true }
+    );
+
+    // Apply rotation separately (no x/y change, so no teleport warning)
+    await ouija_token.document.update({ rotation: rotationDeg });
+
+    // Play sound via Sequencer (no animation subsystem — no deprecation)
     let sequence = new Sequence()
-      .animation()
-      .on(ouija_token)
-      .duration(moveSpeed)
-      .moveTowards(xyPosition, {
-        ease: "easeInOutCubic"
-      })
-      .rotateTowards(ouija_map.bottomLocation, {
-        duration: 1000,
-        ease: "easeInOutCubic"
-      })
-      .waitUntilFinished()
       .sound(soundToPlay)
         .volume(sound_volume)
       .wait(200)
@@ -231,55 +233,58 @@ export class ouija {
     await sequence.play();
   }
 
-  /* ---------------------------------------------
-  // movePattern2: no sound / no animation
-    const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-    ouija.movePattern2(position, extraTime);
-  */
+  /**
+   * Silent movement pattern: move token and rotate, no sound or visual effect.
+   * Uses v13 TokenDocument#move() to avoid deprecated teleport flag.
+   * @param {string} position - The target letter/position key
+   */
   static async movePattern2(position) {
     const xyPosition = this.sceneMap(position);
-    
-    let sequence = new Sequence()
-      .animation()
-      .on(ouija_token)
-      .duration(moveSpeed)
-      .moveTowards(xyPosition, {
-        ease: "easeInOutCubic"
-      })
-      .rotateTowards(ouija_map.bottomLocation, {
-        duration: 1000,
-        ease: "easeInOutCubic"
-      })
 
-      .waitUntilFinished()
+    const ray = new foundry.canvas.geometry.Ray(
+      { x: ouija_token.x, y: ouija_token.y },
+      ouija_map.bottomLocation
+    );
+    const rotationDeg = Math.toDegrees(ray.angle);
+
+    await ouija_token.document.move(
+      [{ x: xyPosition.x, y: xyPosition.y }],
+      { animate: true }
+    );
+
+    await ouija_token.document.update({ rotation: rotationDeg });
+
+    let sequence = new Sequence()
       .wait(extraTimeMin, extraTimeMax);
 
     await sequence.play();
   }
    
-  /* ---------------------------------------------
-  // movePatternEnd: 
-  const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-  ouija.movePatternEnd();
-  */    
+  /**
+   * Movement pattern with sound and visual effect at the end of each move.
+   * Uses v13 TokenDocument#move() to avoid deprecated teleport flag.
+   * @param {string} position - The target letter/position key
+   */
   static async movePatternAnimationEnd(position) {
     const soundToPlay = game.settings.get("ouija-board-for-sequencer", "end_move_sound");
-    const sound_volume = game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume")
+    const sound_volume = game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume");
     const animationEnd = game.settings.get("ouija-board-for-sequencer", "end_animation");
     const xyPosition = this.sceneMap(position);
-    
+
+    const ray = new foundry.canvas.geometry.Ray(
+      { x: ouija_token.x, y: ouija_token.y },
+      ouija_map.bottomLocation
+    );
+    const rotationDeg = Math.toDegrees(ray.angle);
+
+    await ouija_token.document.move(
+      [{ x: xyPosition.x, y: xyPosition.y }],
+      { animate: true }
+    );
+
+    await ouija_token.document.update({ rotation: rotationDeg });
+
     let sequence = new Sequence()
-      .animation()
-        .on(ouija_token)
-        .duration(moveSpeed)
-        .moveTowards(xyPosition, {
-          ease: "easeInOutCubic"
-        })
-        .rotateTowards(ouija_map.bottomLocation, {
-          duration: 1000,
-          ease: "easeInOutCubic"
-        })
-      .waitUntilFinished()
       .sound(soundToPlay)
         .volume(sound_volume)
       .effect()
@@ -287,7 +292,6 @@ export class ouija {
         .atLocation(ouija_token)
         .scale(0.55)
       .waitUntilFinished()
-
       .wait(extraTimeMin, extraTimeMax);
 
     await sequence.play();

@@ -1,3 +1,10 @@
+# 0.2.5
+
+- [Fixed] Replaced Sequencer `.animation().moveTowards()` with v13 native `TokenDocument#move()` to eliminate `DatabaseUpdateOperation#teleport` deprecation warning
+- [Fixed] Replaced global `Ray` usage with `foundry.canvas.geometry.Ray` to eliminate v13 namespace deprecation warning
+- [Changed] Token rotation now applied via direct `document.update()` instead of Sequencer's `.rotateTowards()`
+- [Changed] Enforced minimum Sequencer version 3.3.0 in `module.json`
+
 # 0.2.4
 
 - [Changed] Renamed `main_dialog.html` template to `main_dialog.hbs`

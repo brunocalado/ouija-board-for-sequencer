@@ -6,7 +6,11 @@ This module let you simulate a Ouija Board for your players.
 
 # How to Install
 1. Go to modules and use the link: 
+
+```js
 https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/module.json
+```
+
 
 ## Instructions
 There is a compendium with journals with instructions. Read it!
@@ -33,6 +37,3 @@ You can check changes at [CHANGELOG](CHANGELOG.md)
 - Designer: Matheus Moreno Mota
 - Code: [LICENSE](LICENSE)
 - TollTheDeadSkullSmoke_01_Regular_Grey_400x400 -> https://www.patreon.com/JB2A
-
-# Mestre Digital
-About this module creator: https://sites.google.com/view/mestredigitalmodules
