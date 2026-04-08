@@ -234,6 +234,51 @@ export class ouija {
   }
   
   /**
+   * Converts a desired animation duration (ms) into the grid-squares/second speed
+   * that CONFIG.Token.movement.defaultSpeed expects, so the token takes exactly
+   * `durationMs` to reach `to` from `from`.
+   * This is the only v13-safe way to control movement animation duration:
+   * TokenDocument#move() ignores `duration` options, and Sequencer .moveTowards()
+   * uses the deprecated `teleport` flag internally.
+   * @param {{x: number, y: number}} from - Origin canvas position in pixels
+   * @param {{x: number, y: number}} to - Target canvas position in pixels
+   * @param {number} durationMs - Desired animation duration in milliseconds
+   * @returns {number} Speed in grid squares per second
+   */
+  static _calcGridSpeed(from, to, durationMs) {
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const pixelDistance = Math.sqrt(dx * dx + dy * dy);
+    if (pixelDistance === 0) return CONFIG.Token.movement.defaultSpeed;
+    const gridDistance = pixelDistance / canvas.grid.size;
+    return (gridDistance / durationMs) * 1000;
+  }
+
+  /**
+   * Performs a single animated token move using the v13 native API with a controlled
+   * duration. TokenDocument#move() ignores `duration` options, so we temporarily
+   * override CONFIG.Token.movement.defaultSpeed (grid squares/sec) with a value
+   * derived from the pixel distance and desired duration, then restore it once the
+   * canvas animation promise resolves.
+   * @param {{x: number, y: number}} target - Target canvas position in pixels
+   * @param {number} durationMs - Desired animation duration in milliseconds
+   * @returns {Promise<void>}
+   */
+  static async _animatedMove(target, durationMs) {
+    const from = { x: ouija_token.x, y: ouija_token.y };
+    const originalSpeed = CONFIG.Token.movement.defaultSpeed;
+    CONFIG.Token.movement.defaultSpeed = this._calcGridSpeed(from, target, durationMs);
+
+    await ouija_token.document.move([{ x: target.x, y: target.y }]);
+    // movementAnimationPromise resolves when the canvas animation finishes — without
+    // this wait, CONFIG.Token.movement.defaultSpeed would be restored before the
+    // animation duration is calculated.
+    await (ouija_token.movementAnimationPromise ?? Promise.resolve());
+
+    CONFIG.Token.movement.defaultSpeed = originalSpeed;
+  }
+
+  /**
    * Move the planchette slightly off-center and back when the new letter
    * matches the previous one, so the player sees a distinct "press" motion.
    * Called from sendMessage when consecutive identical characters are detected.
@@ -241,29 +286,20 @@ export class ouija {
    */
   static async jiggle(letter) {
     const xyPosition = this.sceneMap(letter);
-    const jiggleX = xyPosition.x - 15;
-    const jiggleY = xyPosition.y - 25;
+    const jigglePos = { x: xyPosition.x - 15, y: xyPosition.y - 25 };
 
-    // Move slightly off-center using v13 native movement API
-    await ouija_token.document.move(
-      [{ x: jiggleX, y: jiggleY }],
-      { animate: true }
-    );
+    // Cap jiggle duration so it stays snappy regardless of the global moveSpeed setting.
+    const jiggleDuration = Math.min(moveSpeed / 2, 400);
 
+    await this._animatedMove(jigglePos, jiggleDuration);
     await new Promise(resolve => setTimeout(resolve, 250));
-
-    // Move back to exact letter position
-    await ouija_token.document.move(
-      [{ x: xyPosition.x, y: xyPosition.y }],
-      { animate: true }
-    );
-
+    await this._animatedMove(xyPosition, jiggleDuration);
     await new Promise(resolve => setTimeout(resolve, 200));
   }
 
   /**
    * Standard movement pattern: move token, rotate toward bottom, play sound.
-   * Uses v13 TokenDocument#move() to avoid deprecated teleport flag.
+   * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
    * @param {string} position - The target letter/position key
    */
   static async movePattern1(position) {
@@ -271,35 +307,26 @@ export class ouija {
     const sound_volume = game.settings.get("ouija-board-for-sequencer", "move_sound_volume");
     const xyPosition = this.sceneMap(position);
 
-    // Calculate rotation toward bottomLocation using the namespaced Ray
     const ray = new foundry.canvas.geometry.Ray(
       { x: ouija_token.x, y: ouija_token.y },
       ouija_map.bottomLocation
     );
     const rotationDeg = Math.toDegrees(ray.angle);
 
-    // Move token using the v13 native API (avoids teleport deprecation)
-    await ouija_token.document.move(
-      [{ x: xyPosition.x, y: xyPosition.y }],
-      { animate: true }
-    );
-
-    // Apply rotation separately (no x/y change, so no teleport warning)
+    await this._animatedMove(xyPosition, moveSpeed);
     await ouija_token.document.update({ rotation: rotationDeg });
 
-    // Play sound via Sequencer (no animation subsystem — no deprecation)
-    let sequence = new Sequence()
+    await new Sequence()
       .sound(soundToPlay)
         .volume(sound_volume)
       .wait(200)
-      .wait(extraTimeMin, extraTimeMax);
-
-    await sequence.play();
+      .wait(extraTimeMin, extraTimeMax)
+      .play();
   }
 
   /**
    * Silent movement pattern: move token and rotate, no sound or visual effect.
-   * Uses v13 TokenDocument#move() to avoid deprecated teleport flag.
+   * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
    * @param {string} position - The target letter/position key
    */
   static async movePattern2(position) {
@@ -311,22 +338,17 @@ export class ouija {
     );
     const rotationDeg = Math.toDegrees(ray.angle);
 
-    await ouija_token.document.move(
-      [{ x: xyPosition.x, y: xyPosition.y }],
-      { animate: true }
-    );
-
+    await this._animatedMove(xyPosition, moveSpeed);
     await ouija_token.document.update({ rotation: rotationDeg });
 
-    let sequence = new Sequence()
-      .wait(extraTimeMin, extraTimeMax);
-
-    await sequence.play();
+    await new Sequence()
+      .wait(extraTimeMin, extraTimeMax)
+      .play();
   }
    
   /**
    * Movement pattern with sound and visual effect at the end of each move.
-   * Uses v13 TokenDocument#move() to avoid deprecated teleport flag.
+   * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
    * @param {string} position - The target letter/position key
    */
   static async movePatternAnimationEnd(position) {
@@ -341,14 +363,10 @@ export class ouija {
     );
     const rotationDeg = Math.toDegrees(ray.angle);
 
-    await ouija_token.document.move(
-      [{ x: xyPosition.x, y: xyPosition.y }],
-      { animate: true }
-    );
-
+    await this._animatedMove(xyPosition, moveSpeed);
     await ouija_token.document.update({ rotation: rotationDeg });
 
-    let sequence = new Sequence()
+    await new Sequence()
       .sound(soundToPlay)
         .volume(sound_volume)
       .effect()
@@ -356,9 +374,8 @@ export class ouija {
         .atLocation(ouija_token)
         .scale(0.55)
       .waitUntilFinished()
-      .wait(extraTimeMin, extraTimeMax);
-
-    await sequence.play();
+      .wait(extraTimeMin, extraTimeMax)
+      .play();
   }
 
   /* ---------------------------------------------
