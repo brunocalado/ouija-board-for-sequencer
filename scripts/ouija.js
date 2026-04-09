@@ -66,7 +66,7 @@ export class ouija {
       customPositionLabel9: customPositionLabel9
     };
 
-    const template = await foundry.applications.handlebars.renderTemplate(`modules/ouija-board-for-sequencer/templates/main_dialog.hbs`, templateData);
+    const template = await foundry.applications.handlebars.renderTemplate(`modules/ouija-board-for-sequencer/templates/main-dialog.hbs`, templateData);
 
     const persistent = game.settings.get("ouija-board-for-sequencer", "persistent_dialog");
 

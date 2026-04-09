@@ -1,23 +1,22 @@
 <div class="ouija-dialog">
   <div class="ouija-section">
     <p class="ouija-section-title">Custom Position Labels</p>
-    <p style="margin-bottom: 0.75em; font-size: 0.85em; color: var(--color-text-dark-secondary, #555);">
+    <p class="ouija-description">
       Set the display label for each custom position. Maximum 30 characters each.
     </p>
-    <table style="width:100%; border-collapse: collapse;">
+    <table class="ouija-label-table">
       {{#each labels}}
-      <tr style="margin-bottom: 0.4em;">
-        <td style="padding: 0.3em 0.6em 0.3em 0; width: 40%; font-size: 0.9em;">
+      <tr>
+        <td class="ouija-label-cell">
           <label for="ouija-label-{{@index}}">Position {{number}}</label>
         </td>
-        <td style="padding: 0.3em 0;">
+        <td class="ouija-input-cell">
           <input
             type="text"
             id="ouija-label-{{@index}}"
             name="ouija-label-{{@index}}"
             value="{{value}}"
             maxlength="30"
-            style="width: 100%;"
           />
         </td>
       </tr>

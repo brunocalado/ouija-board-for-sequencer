@@ -1,3 +1,9 @@
+# 0.2.10
+
+- [Changed] Moved all inline styles from templates to `ouija.css` for centralized maintenance
+- [Changed] Added `.ouija-dialog` wrapper to `capture-position.hbs` for consistent CSS scoping
+- [Changed] Renamed `main_dialog.hbs` to `main-dialog.hbs` to follow kebab-case convention
+
 # 0.2.8
 
 - [Changed] Control dialog now stays open after clicking Move; only closes on Cancel or X

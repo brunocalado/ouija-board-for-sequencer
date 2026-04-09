@@ -1,15 +1,15 @@
 <div class="ouija-dialog">
   <div class="ouija-section">
     <p class="ouija-section-title">Board Coordinate Map</p>
-    <p style="margin-bottom: 0.5em; font-size: 0.85em; color: var(--color-text-dark-secondary, #555);">
+    <p class="ouija-description">
       Paste or edit the JSON map below. Each key must match a board position
       (e.g. <code>letter_a</code>, <code>number_0</code>, <code>symbol_yes</code>, <code>bottomLocation</code>).
       Use the <strong>Reset to Default</strong> button to restore the bundled map.
     </p>
     <textarea
       id="ouija-map-json"
+      class="ouija-json-editor"
       rows="22"
-      style="width:100%; font-family: monospace; font-size: 0.8em; resize: vertical;"
     >{{mapJson}}</textarea>
   </div>
 </div>

@@ -3,11 +3,11 @@
     <p class="ouija-section-title">Sound Settings</p>
 
     {{!-- Move Sound --}}
-    <div class="form-group" style="margin-bottom: 0.75em;">
+    <div class="form-group ouija-form-spaced">
       <label for="ouija-sound-move">Move Sound</label>
       <p class="notes">This sound is played each movement.</p>
-      <div style="display: flex; gap: 0.4em;">
-        <input type="text" id="ouija-sound-move" value="{{moveSoundPath}}" style="flex: 1;" />
+      <div class="ouija-file-row">
+        <input type="text" id="ouija-sound-move" value="{{moveSoundPath}}" />
         <button type="button" class="ouija-browse-btn" data-target="ouija-sound-move" data-type="audio">
           <i class="fas fa-file-audio"></i>
         </button>
@@ -15,22 +15,22 @@
     </div>
 
     {{!-- Move Sound Volume --}}
-    <div class="form-group" style="margin-bottom: 0.75em;">
+    <div class="form-group ouija-form-spaced">
       <label for="ouija-volume-move">Move Sound Volume</label>
       <p class="notes">Use 0.1 for 10%, 0.6 for 60%, etc.</p>
-      <div style="display: flex; gap: 0.6em; align-items: center;">
-        <input type="range" id="ouija-volume-move" min="0" max="1" step="0.1" value="{{moveSoundVolume}}" style="flex: 1;" />
-        <span id="ouija-volume-move-display" style="min-width: 2.5em; text-align: right;">{{moveSoundVolume}}</span>
+      <div class="ouija-range-row">
+        <input type="range" id="ouija-volume-move" min="0" max="1" step="0.1" value="{{moveSoundVolume}}" />
+        <span class="ouija-range-display" id="ouija-volume-move-display">{{moveSoundVolume}}</span>
       </div>
     </div>
 
-    <hr style="margin: 0.75em 0;" />
+    <hr class="ouija-divider" />
 
     {{!-- Use End Sound Toggle --}}
-    <div class="form-group" style="margin-bottom: 0.75em;">
-      <div style="display: flex; align-items: center; gap: 0.5em;">
+    <div class="form-group ouija-form-spaced">
+      <div class="ouija-checkbox-row">
         <input type="checkbox" id="ouija-use-end-sound" {{#if useEndSound}}checked{{/if}} />
-        <label for="ouija-use-end-sound" style="margin: 0; font-weight: bold;">Use End Sound</label>
+        <label for="ouija-use-end-sound" class="ouija-checkbox-label">Use End Sound</label>
       </div>
       <p class="notes">When enabled, the end sound replaces the normal move sound.</p>
     </div>
@@ -39,11 +39,11 @@
     <div id="ouija-end-sound-section">
 
       {{!-- End Move Sound --}}
-      <div class="form-group" style="margin-bottom: 0.75em;">
+      <div class="form-group ouija-form-spaced">
         <label for="ouija-sound-end">End Move Sound</label>
         <p class="notes">This sound is played instead of the normal move sound.</p>
-        <div style="display: flex; gap: 0.4em;">
-          <input type="text" id="ouija-sound-end" value="{{endSoundPath}}" style="flex: 1;" />
+        <div class="ouija-file-row">
+          <input type="text" id="ouija-sound-end" value="{{endSoundPath}}" />
           <button type="button" class="ouija-browse-btn" data-target="ouija-sound-end" data-type="audio">
             <i class="fas fa-file-audio"></i>
           </button>
@@ -51,12 +51,12 @@
       </div>
 
       {{!-- End Move Sound Volume --}}
-      <div class="form-group" style="margin-bottom: 0.25em;">
+      <div class="form-group">
         <label for="ouija-volume-end">End Move Sound Volume</label>
         <p class="notes">Use 0.1 for 10%, 0.6 for 60%, etc.</p>
-        <div style="display: flex; gap: 0.6em; align-items: center;">
-          <input type="range" id="ouija-volume-end" min="0" max="1" step="0.1" value="{{endSoundVolume}}" style="flex: 1;" />
-          <span id="ouija-volume-end-display" style="min-width: 2.5em; text-align: right;">{{endSoundVolume}}</span>
+        <div class="ouija-range-row">
+          <input type="range" id="ouija-volume-end" min="0" max="1" step="0.1" value="{{endSoundVolume}}" />
+          <span class="ouija-range-display" id="ouija-volume-end-display">{{endSoundVolume}}</span>
         </div>
       </div>
 

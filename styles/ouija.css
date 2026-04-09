@@ -1,16 +1,17 @@
 /* ============================================================
    Ouija Board for Sequencer — Dialog Styles
    Scoped to .ouija-dialog to prevent global bleed.
-   Applied to DialogV2 content rendered from main_dialog.hbs.
+   Applied to DialogV2 content rendered from main-dialog.hbs.
    ============================================================ */
 
 .ouija-dialog {
+  --ouija-border: var(--color-border-light-tertiary, #5a5a52);
   padding: 4px 0;
 }
 
 /* Solid section containers — replaces the semi-transparent .boxcheckpai */
 .ouija-dialog .ouija-section {
-  border: 1px solid var(--color-border-light-tertiary, #5a5a52);
+  border: 1px solid var(--ouija-border);
   border-radius: 4px;
   padding: 8px 12px;
   margin-bottom: 10px;
@@ -26,7 +27,7 @@
   color: var(--color-text-light-heading, #c9c7b8);
   margin: 0 0 8px;
   padding-bottom: 5px;
-  border-bottom: 1px solid var(--color-border-light-tertiary, #5a5a52);
+  border-bottom: 1px solid var(--ouija-border);
 }
 
 /* Radio button row */
@@ -90,4 +91,97 @@
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Description paragraph used across editor dialogs */
+.ouija-dialog .ouija-description {
+  margin-bottom: 0.75em;
+  font-size: 0.85em;
+  color: var(--color-text-dark-secondary, #555);
+}
+
+/* JSON editor textarea (map-editor) */
+.ouija-dialog .ouija-json-editor {
+  width: 100%;
+  font-family: monospace;
+  font-size: 0.8em;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+/* Label editor table (label-editor) */
+.ouija-dialog .ouija-label-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ouija-dialog .ouija-label-cell {
+  padding: 0.3em 0.6em 0.3em 0;
+  width: 40%;
+  font-size: 0.9em;
+}
+
+.ouija-dialog .ouija-input-cell {
+  padding: 0.3em 0;
+}
+
+.ouija-dialog .ouija-input-cell input {
+  width: 100%;
+}
+
+/* Form group with extra bottom spacing (sound-editor) */
+.ouija-dialog .ouija-form-spaced {
+  margin-bottom: 0.75em;
+}
+
+/* File browser row — text input + browse button (sound-editor) */
+.ouija-dialog .ouija-file-row {
+  display: flex;
+  gap: 0.4em;
+}
+
+.ouija-dialog .ouija-file-row input {
+  flex: 1;
+}
+
+/* Range slider row — slider + value display (sound-editor) */
+.ouija-dialog .ouija-range-row {
+  display: flex;
+  gap: 0.6em;
+  align-items: center;
+}
+
+.ouija-dialog .ouija-range-row input[type="range"] {
+  flex: 1;
+}
+
+.ouija-dialog .ouija-range-display {
+  min-width: 2.5em;
+  text-align: right;
+}
+
+/* Horizontal divider between sound sections */
+.ouija-dialog .ouija-divider {
+  margin: 0.75em 0;
+}
+
+/* Checkbox + label inline row (sound-editor toggle) */
+.ouija-dialog .ouija-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.ouija-dialog .ouija-checkbox-label {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Capture position coordinate inputs */
+.ouija-dialog .ouija-capture-fields {
+  gap: 8px;
+}
+
+.ouija-dialog .ouija-capture-input {
+  width: 100px;
 }

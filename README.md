@@ -36,4 +36,3 @@ You can check changes at [CHANGELOG](CHANGELOG.md)
 - Image: https://pixabay.com/service/license/
 - Designer: Matheus Moreno Mota
 - Code: [LICENSE](LICENSE)
-- TollTheDeadSkullSmoke_01_Regular_Grey_400x400 -> https://www.patreon.com/JB2A
