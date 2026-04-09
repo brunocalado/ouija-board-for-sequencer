@@ -16,8 +16,8 @@
     <div class="form-fields">
       <select id="ouija-capture-key" style="width:100%;">
         <option value="">— Select a position key —</option>
-        {{#each mapKeys}}
-          <option value="{{this}}">{{this}}</option>
+        {{#each mapOptions}}
+          <option value="{{this.key}}">{{this.label}}</option>
         {{/each}}
       </select>
     </div>

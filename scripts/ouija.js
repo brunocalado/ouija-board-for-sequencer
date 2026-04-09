@@ -185,15 +185,17 @@ export class ouija {
   }
 
   static async sendMessage(text) {
-    let message = text.split('');
+    const message = text.split('');
     let previousLetter = null;
 
     for (let index = 0; index < message.length; index++) {
       const letter = message[index];
+      const isLast = index === message.length - 1;
+
       if (letter === previousLetter) {
-        await this.jiggle(letter);
+        await this.jiggle(letter, isLast);
       } else {
-        await this.sendToPosition(letter);
+        await this.sendToPosition(letter, isLast);
       }
       previousLetter = letter;
     }
@@ -202,9 +204,10 @@ export class ouija {
   /**
    * Sends the planchette to a single board position using the standard movement pattern.
    * @param {string} letter - The target letter/position key
+   * @param {boolean} [isLast=true] - Whether this is the final move of a sequence.
    */
-  static async sendToPosition(letter) {
-    await this.movePattern1(letter);
+  static async sendToPosition(letter, isLast = true) {
+    await this.movePattern1(letter, isLast);
   }
   
   /**
@@ -257,8 +260,10 @@ export class ouija {
    * matches the previous one, so the player sees a distinct "press" motion.
    * Called from sendMessage when consecutive identical characters are detected.
    * @param {string} letter - The repeated letter/position key
+   * @param {boolean} [isLast=false] - Passed through from sendMessage; unused internally
+   *   since jiggle performs no sound, but kept for API consistency.
    */
-  static async jiggle(letter) {
+  static async jiggle(letter, isLast = false) {
     const xyPosition = this.sceneMap(letter);
     const jigglePos = { x: xyPosition.x - 15, y: xyPosition.y - 25 };
 
@@ -277,8 +282,11 @@ export class ouija {
    * instead of the normal move sound.
    * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
    * @param {string} position - The target letter/position key
+   * @param {boolean} [isLast=true] - Whether this is the final move of a sequence.
+   *   When true and use_end_sound is enabled, plays the end sound instead of the primary sound.
+   *   Defaults to true so standalone calls (single-position moves) always honour the setting.
    */
-  static async movePattern1(position) {
+  static async movePattern1(position, isLast = true) {
     const ns = "ouija-board-for-sequencer";
     const useEndSound = game.settings.get(ns, "use_end_sound");
     const xyPosition = this.sceneMap(position);
@@ -292,7 +300,8 @@ export class ouija {
     await this._animatedMove(xyPosition, moveSpeed);
     await ouija_token.document.update({ rotation: rotationDeg });
 
-    if (useEndSound) {
+    // Use end sound only on the final move of a sequence, when the setting is enabled.
+    if (useEndSound && isLast) {
       const soundToPlay = game.settings.get(ns, "end_move_sound");
       const sound_volume = game.settings.get(ns, "end_move_sound_volume");
 
@@ -695,9 +704,25 @@ export class ouija {
       return;
     }
 
+    // Build label lookup for symbol_01 through symbol_09.
+    const symbolLabelMap = {};
+    for (let i = 1; i <= 9; i++) {
+      const settingKey = `custom_position_label_${i}`;
+      const label = game.settings.get("ouija-board-for-sequencer", settingKey);
+      if (label && label.trim() !== "") {
+        symbolLabelMap[`symbol_0${i}`] = label.trim();
+      }
+    }
+
+    // Build option array: { key, label } — label falls back to the raw key.
+    const mapOptions = mapKeys.map(key => ({
+      key,
+      label: symbolLabelMap[key] ?? key
+    }));
+
     const template = await foundry.applications.handlebars.renderTemplate(
       "modules/ouija-board-for-sequencer/templates/capture-position.hbs",
-      { mapKeys, currentX, currentY }
+      { mapOptions, currentX, currentY }
     );
 
     await foundry.applications.api.DialogV2.wait({

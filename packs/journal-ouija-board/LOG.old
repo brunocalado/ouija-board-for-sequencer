@@ -1,11 +1,7 @@
-2026/04/09-08:56:12.881 303c Delete type=3 #1
-2026/04/09-08:56:23.944 df8 Level-0 table #299: started
-2026/04/09-08:56:23.944 df8 Level-0 table #299: 0 bytes OK
-2026/04/09-08:56:23.945 df8 Delete type=0 #297
-2026/04/09-08:56:23.948 df8 Manual compaction at level-0 from '!journal!PdIcUhbKdGWmVOvt' @ 72057594037927935 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 14 : 1
-2026/04/09-08:56:23.948 df8 Compacting 1@0 + 0@1 files
-2026/04/09-08:56:23.950 df8 Generated table #300@0: 4 keys, 4007 bytes
-2026/04/09-08:56:23.950 df8 Compacted 1@0 + 0@1 files => 4007 bytes
-2026/04/09-08:56:23.951 df8 compacted to: files[ 0 1 0 0 0 0 0 ]
-2026/04/09-08:56:23.951 df8 Delete type=2 #294
-2026/04/09-08:56:23.956 df8 Manual compaction at level-0 from '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 14 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at (end)
+2026/04/09-09:37:02.120 303c Recovering log #298
+2026/04/09-09:37:02.123 303c Delete type=0 #298
+2026/04/09-09:37:02.123 303c Delete type=3 #296
+2026/04/09-10:29:44.515 df8 Level-0 table #304: started
+2026/04/09-10:29:44.515 df8 Level-0 table #304: 0 bytes OK
+2026/04/09-10:29:44.517 df8 Delete type=0 #302
+2026/04/09-10:29:44.522 df8 Manual compaction at level-0 from '!journal!PdIcUhbKdGWmVOvt' @ 72057594037927935 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at (end)
