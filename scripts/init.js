@@ -1,5 +1,6 @@
 const moduleName = 'ouija-board-for-sequencer';
-import { ouija, DEFAULT_MAP } from './ouija.js';
+import { ouija } from './ouija.js';
+import { DEFAULT_MAP } from './map-default.js';
 
 Hooks.once('init', () => {
   // --------------------------------------------------

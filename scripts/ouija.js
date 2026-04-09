@@ -1,61 +1,10 @@
+import { DEFAULT_MAP } from './map-default.js';
+
 let ouija_map;
 let ouija_token;
 let extraTimeMin=1;
 let extraTimeMax=1;
 let moveSpeed=1000;
-
-/** Single source of truth for the default board coordinate map. */
-export const DEFAULT_MAP = {
-  letter_a: { x: 287, y: 503 },
-  letter_b: { x: 351, y: 462 },
-  letter_c: { x: 412, y: 437 },
-  letter_d: { x: 469, y: 417 },
-  letter_e: { x: 528, y: 402 },
-  letter_f: { x: 588, y: 391 },
-  letter_g: { x: 648, y: 387 },
-  letter_h: { x: 716, y: 389 },
-  letter_i: { x: 773, y: 391 },
-  letter_j: { x: 822, y: 398 },
-  letter_k: { x: 886, y: 412 },
-  letter_l: { x: 947, y: 433 },
-  letter_m: { x: 1016, y: 462 },
-  letter_n: { x: 1092, y: 503 },
-  letter_o: { x: 317, y: 580 },
-  letter_p: { x: 372, y: 550 },
-  letter_q: { x: 434, y: 526 },
-  letter_r: { x: 499, y: 504 },
-  letter_s: { x: 563, y: 486 },
-  letter_t: { x: 623, y: 474 },
-  letter_u: { x: 687, y: 473 },
-  letter_v: { x: 760, y: 475 },
-  letter_w: { x: 845, y: 493 },
-  letter_x: { x: 923, y: 520 },
-  letter_y: { x: 991, y: 544 },
-  letter_z: { x: 1047, y: 581 },
-  number_1: { x: 399, y: 654 },
-  number_2: { x: 451, y: 655 },
-  number_3: { x: 514, y: 655 },
-  number_4: { x: 578, y: 655 },
-  number_5: { x: 642, y: 651 },
-  number_6: { x: 706, y: 653 },
-  number_7: { x: 765, y: 650 },
-  number_8: { x: 824, y: 654 },
-  number_9: { x: 883, y: 655 },
-  number_0: { x: 955, y: 655 },
-  symbol_yes: { x: 383, y: 287 },
-  symbol_no: { x: 993, y: 283 },
-  symbol_space: { x: 679, y: 284 },
-  symbol_01: { x: 681, y: 753 },
-  symbol_02: { x: 249, y: 260 },
-  symbol_03: { x: 215, y: 326 },
-  symbol_04: { x: 1128, y: 254 },
-  symbol_05: { x: 1162, y: 326 },
-  symbol_06: { x: 1216, y: 54 },
-  symbol_07: { x: 1494, y: 54 },
-  symbol_08: { x: 1434, y: 579 },
-  symbol_09: { x: 71, y: 928 },
-  bottomLocation: { x: 607.1601354620223, y: 785.2926947266571 }
-};
 
 // const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
 export class ouija {
