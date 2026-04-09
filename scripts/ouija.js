@@ -61,55 +61,6 @@ export const DEFAULT_MAP = {
 export class ouija {
 
   /* ---------------------------------------------
-  // getTokenXY: return the position of a token
-    const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-    ouija.getTokenXY();
-  */
-  static async getTokenXY() {
-    if (canvas.tokens.controlled[0] === undefined) {
-      ui.notifications.error("You must select a token!");
-      return;
-    } else {
-      ouija_token = canvas.tokens.controlled[0];
-
-      let message = '';
-      let finalCode = `{ x: ${ouija_token.position.x}, y: ${ouija_token.position.y} }`;
-
-      message += `<ul><li>X: <b style="color:red">${ouija_token.position.x}</b></li>`;
-      message += `<li>Y: <b style="color:red">${ouija_token.position.y}</b></li></ul>`;
-
-      message += `<b style="color:red" id="#tokenposition">{ ${ouija_token.position.x}, ${ouija_token.position.y} }</p>`;
-      message += `<p>Copied to clipboard.</p>`;
-
-      let template = message;
-
-      /* view */
-      let form = `
-        <label>Copy this</label>
-        <textarea id="moduleTextArea" rows="3" cols="33">${finalCode}</textarea>
-      `;
-
-      await foundry.applications.api.DialogV2.wait({
-        window: { title: "Token Data" },
-        content: form,
-        buttons: [
-          {
-            label: "Copy to Clipboard",
-            action: "copy",
-            callback: () => {
-              let copyText = document.getElementById("moduleTextArea"); /* Get the text field */
-              copyText.select(); /* Select the text field */
-              document.execCommand("copy"); /* Copy the text inside the text field */
-              ui.notifications.notify(`Saved on Clipboard`); /* Alert the copied text */
-            }
-          }
-        ]
-      });
-    }
-
-  }
-
-  /* ---------------------------------------------
   // main: 
     const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
     ouija.main();
@@ -706,6 +657,87 @@ export class ouija {
             await game.settings.set(ns, "end_move_sound",        el.querySelector("#ouija-sound-end").value.trim());
             await game.settings.set(ns, "end_move_sound_volume", Math.round(Number(el.querySelector("#ouija-volume-end").value) * 10) / 10);
             ui.notifications.notify("Ouija Board: Sound settings saved.");
+          }
+        },
+        {
+          label: "Cancel",
+          action: "cancel"
+        }
+      ],
+      rejectClose: false
+    });
+  }
+
+  /**
+   * Opens the Capture Position dialog, allowing the user to overwrite a specific
+   * map key's coordinates with the currently selected token's canvas position.
+   * Re-reads map_data fresh inside the save callback to avoid stale-closure overwrites
+   * if the Map Editor was used concurrently.
+   * Called from the injected button in module settings and via Ouija.capturePosition().
+   * Triggered by the renderSettingsConfig hook or directly from a macro.
+   */
+  static async openCapturePositionEditor() {
+    if (!canvas.tokens.controlled[0]) {
+      ui.notifications.error("Select a token on the canvas first, then click Capture Position.");
+      return;
+    }
+
+    const token = canvas.tokens.controlled[0];
+    const currentX = token.position.x;
+    const currentY = token.position.y;
+
+    // Read map now only to build the combobox key list; actual save re-reads a fresh copy.
+    let mapKeys;
+    try {
+      mapKeys = Object.keys(JSON.parse(game.settings.get("ouija-board-for-sequencer", "map_data")));
+    } catch (e) {
+      ui.notifications.error("Ouija Board: Map JSON is invalid. Fix it in the Map Editor first.");
+      return;
+    }
+
+    const template = await foundry.applications.handlebars.renderTemplate(
+      "modules/ouija-board-for-sequencer/templates/capture-position.hbs",
+      { mapKeys, currentX, currentY }
+    );
+
+    await foundry.applications.api.DialogV2.wait({
+      window: { title: "Ouija Board — Capture Token Position" },
+      content: template,
+      buttons: [
+        {
+          label: "Save to Map",
+          action: "save",
+          callback: async (event, button, dialog) => {
+            const el = dialog.element;
+            const selectedKey = el.querySelector("#ouija-capture-key").value;
+            const xVal = parseFloat(el.querySelector("#ouija-capture-x").value);
+            const yVal = parseFloat(el.querySelector("#ouija-capture-y").value);
+
+            if (!selectedKey) {
+              ui.notifications.error("Select a position key before saving.");
+              return false;
+            }
+            if (isNaN(xVal) || isNaN(yVal)) {
+              ui.notifications.error("X and Y must be valid numbers.");
+              return false;
+            }
+
+            // Re-read fresh copy to avoid overwriting concurrent Map Editor changes.
+            let freshMap;
+            try {
+              freshMap = JSON.parse(game.settings.get("ouija-board-for-sequencer", "map_data"));
+            } catch (e) {
+              ui.notifications.error("Map JSON became invalid. Aborting save.");
+              return false;
+            }
+
+            freshMap[selectedKey] = { x: xVal, y: yVal };
+            await game.settings.set(
+              "ouija-board-for-sequencer",
+              "map_data",
+              JSON.stringify(freshMap, null, 2)
+            );
+            ui.notifications.notify(`Ouija Board: "${selectedKey}" saved → { x: ${xVal}, y: ${yVal} }`);
           }
         },
         {

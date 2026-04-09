@@ -1,5 +1,11 @@
-2026/04/08-14:07:25.400 49a4 Log #288: 0 ops saved to Table #289 OK
-2026/04/08-14:07:25.401 49a4 Archiving C:\Users\Bruno\Documents\VTT\fvttdev\Data\modules\ouija-board-for-sequencer\packs\journal-ouija-board/000288.log: OK
-2026/04/08-14:07:25.401 49a4 Table #285: 4 entries OK
-2026/04/08-14:07:25.403 49a4 Archiving C:\Users\Bruno\Documents\VTT\fvttdev\Data\modules\ouija-board-for-sequencer\packs\journal-ouija-board/MANIFEST-000286: OK
-2026/04/08-14:07:25.408 49a4 **** Repaired leveldb C:\Users\Bruno\Documents\VTT\fvttdev\Data\modules\ouija-board-for-sequencer\packs\journal-ouija-board; recovered 1 files; 3973 bytes. Some data may have been lost. ****
+2026/04/09-08:56:12.881 303c Delete type=3 #1
+2026/04/09-08:56:23.944 df8 Level-0 table #299: started
+2026/04/09-08:56:23.944 df8 Level-0 table #299: 0 bytes OK
+2026/04/09-08:56:23.945 df8 Delete type=0 #297
+2026/04/09-08:56:23.948 df8 Manual compaction at level-0 from '!journal!PdIcUhbKdGWmVOvt' @ 72057594037927935 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 14 : 1
+2026/04/09-08:56:23.948 df8 Compacting 1@0 + 0@1 files
+2026/04/09-08:56:23.950 df8 Generated table #300@0: 4 keys, 4007 bytes
+2026/04/09-08:56:23.950 df8 Compacted 1@0 + 0@1 files => 4007 bytes
+2026/04/09-08:56:23.951 df8 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/04/09-08:56:23.951 df8 Delete type=2 #294
+2026/04/09-08:56:23.956 df8 Manual compaction at level-0 from '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 14 : 1 .. '!journal.pages!PdIcUhbKdGWmVOvt.j20GDcDmSjO5XCmr' @ 0 : 0; will stop at (end)

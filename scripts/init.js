@@ -205,8 +205,11 @@ Hooks.once('init', () => {
     type: String
   });
 
-  // Expose simplified global for macros: Ouija.Control()
-  globalThis.Ouija = { Control: () => ouija.Control() };
+  // Expose simplified global for macros: Ouija.Control(), Ouija.capturePosition()
+  globalThis.Ouija = {
+    Control:         () => ouija.Control(),
+    capturePosition: () => ouija.openCapturePositionEditor()
+  };
 });
 
 /**
