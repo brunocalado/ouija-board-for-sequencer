@@ -168,69 +168,92 @@ export class ouija {
 
     const template = await foundry.applications.handlebars.renderTemplate(`modules/ouija-board-for-sequencer/templates/main_dialog.hbs`, templateData);
 
-    await foundry.applications.api.DialogV2.wait({
-      window: { title: "Ouija" },
-      content: template,
-      buttons: [
-        {
-          label: "Move",
-          action: "ok",
-          callback: async (event, button, dialog) => {
-            await this.moveThing(dialog.element);
+    const persistent = game.settings.get("ouija-board-for-sequencer", "persistent_dialog");
+
+    if (persistent) {
+      const dialog = new foundry.applications.api.DialogV2({
+        window: { title: "Ouija" },
+        content: template,
+        buttons: [
+          {
+            label: "Move",
+            action: "ok",
+            callback: async (event, button, dialog) => {
+              await this.moveThing(dialog.element);
+              return false;
+            }
+          },
+          {
+            label: "Cancel",
+            action: "cancel"
           }
-        },
-        {
-          label: "Cancel",
-          action: "cancel"
-        }
-      ]
-    });
-  }
-
-  static async moveThing(html) {
-    let msg = '';
-    const messageType = html.querySelector('input[name="extra_position"]:checked').value; // message, position_yes, position_no
-    const autoMessage = html.querySelector("#message").value;
-    extraTimeMin = parseInt( html.querySelector("#extraTimeMin").value );
-    extraTimeMax = parseInt( html.querySelector("#extraTimeMax").value );
-    moveSpeed = parseInt( html.querySelector("#moveSpeed").value );
-    const moveType = html.querySelector('#movetype').value; // Standard, No Sound/No Animation, Animation at End
-    const customPosition = html.querySelector('#custom_position').value; // custom_position_choose, position_01, ..., position_06
-
-    if (messageType=='message' && customPosition=='custom_position_choose' ) { // Message
-      this.sendMessage(autoMessage.toLowerCase(), moveType);
-    } else { // 
-      if ( customPosition!='custom_position_choose' ) {
-        this.sendToPosition(customPosition.toLowerCase(), moveType);
-      } else {
-        this.sendToPosition(messageType.toLowerCase(), moveType);
-      }
+        ],
+        rejectClose: false
+      });
+      await dialog.render(true);
+    } else {
+      await foundry.applications.api.DialogV2.wait({
+        window: { title: "Ouija" },
+        content: template,
+        buttons: [
+          {
+            label: "Move",
+            action: "ok",
+            callback: async (event, button, dialog) => {
+              await this.moveThing(dialog.element);
+            }
+          },
+          {
+            label: "Cancel",
+            action: "cancel"
+          }
+        ]
+      });
     }
   }
 
-  static async sendMessage(text, moveType) {
+  static async moveThing(html) {
+    const messageType = html.querySelector('input[name="extra_position"]:checked').value;
+    const autoMessage = html.querySelector("#message").value;
+    extraTimeMin = parseInt(html.querySelector("#extraTimeMin").value);
+    extraTimeMax = parseInt(html.querySelector("#extraTimeMax").value);
+    moveSpeed = parseInt(html.querySelector("#moveSpeed").value);
+    const customPosition = html.querySelector('#custom_position').value;
+
+    // Persist current values so next dialog open pre-fills them
+    await game.settings.set("ouija-board-for-sequencer", "extra_time_min_default", extraTimeMin);
+    await game.settings.set("ouija-board-for-sequencer", "extra_time_max_default", extraTimeMax);
+    await game.settings.set("ouija-board-for-sequencer", "move_speed_default", moveSpeed);
+
+    if (messageType === 'message' && customPosition === 'custom_position_choose') {
+      await this.sendMessage(autoMessage.toLowerCase());
+    } else {
+      const target = customPosition !== 'custom_position_choose' ? customPosition : messageType;
+      await this.sendToPosition(target.toLowerCase());
+    }
+  }
+
+  static async sendMessage(text) {
     let message = text.split('');
-    let previousLetter=null; // jiggle
+    let previousLetter = null;
 
     for (let index = 0; index < message.length; index++) {
       const letter = message[index];
       if (letter === previousLetter) {
         await this.jiggle(letter);
       } else {
-        const output = await this.sendToPosition(letter, moveType);
+        await this.sendToPosition(letter);
       }
       previousLetter = letter;
-    } // END FOR
+    }
   }
 
-  static async sendToPosition(letter, moveType) {    
-    if (moveType == 'moveType1') { // Standard - sound / no animation
-      const output = await this.movePattern1(letter); 
-    } else if (moveType == 'moveType2') { // no sound / no animation
-      const output = await this.movePattern2(letter); 
-    } else if (moveType == 'moveType3') { // sound + Animation at the End
-      const output = await this.movePatternAnimationEnd(letter);
-    }    
+  /**
+   * Sends the planchette to a single board position using the standard movement pattern.
+   * @param {string} letter - The target letter/position key
+   */
+  static async sendToPosition(letter) {
+    await this.movePattern1(letter);
   }
   
   /**
@@ -299,12 +322,14 @@ export class ouija {
 
   /**
    * Standard movement pattern: move token, rotate toward bottom, play sound.
+   * When the "Use End Sound" toggle is enabled, plays the end sound and animation
+   * instead of the normal move sound.
    * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
    * @param {string} position - The target letter/position key
    */
   static async movePattern1(position) {
-    const soundToPlay = game.settings.get("ouija-board-for-sequencer", "move_sound");
-    const sound_volume = game.settings.get("ouija-board-for-sequencer", "move_sound_volume");
+    const ns = "ouija-board-for-sequencer";
+    const useEndSound = game.settings.get(ns, "use_end_sound");
     const xyPosition = this.sceneMap(position);
 
     const ray = new foundry.canvas.geometry.Ray(
@@ -316,66 +341,27 @@ export class ouija {
     await this._animatedMove(xyPosition, moveSpeed);
     await ouija_token.document.update({ rotation: rotationDeg });
 
-    await new Sequence()
-      .sound(soundToPlay)
-        .volume(sound_volume)
-      .wait(200)
-      .wait(extraTimeMin, extraTimeMax)
-      .play();
-  }
+    if (useEndSound) {
+      const soundToPlay = game.settings.get(ns, "end_move_sound");
+      const sound_volume = game.settings.get(ns, "end_move_sound_volume");
 
-  /**
-   * Silent movement pattern: move token and rotate, no sound or visual effect.
-   * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
-   * @param {string} position - The target letter/position key
-   */
-  static async movePattern2(position) {
-    const xyPosition = this.sceneMap(position);
+      await new Sequence()
+        .sound(soundToPlay)
+          .volume(sound_volume)
+        .wait(200)
+        .wait(extraTimeMin, extraTimeMax)
+        .play();
+    } else {
+      const soundToPlay = game.settings.get(ns, "move_sound");
+      const sound_volume = game.settings.get(ns, "move_sound_volume");
 
-    const ray = new foundry.canvas.geometry.Ray(
-      { x: ouija_token.x, y: ouija_token.y },
-      ouija_map.bottomLocation
-    );
-    const rotationDeg = Math.toDegrees(ray.angle);
-
-    await this._animatedMove(xyPosition, moveSpeed);
-    await ouija_token.document.update({ rotation: rotationDeg });
-
-    await new Sequence()
-      .wait(extraTimeMin, extraTimeMax)
-      .play();
-  }
-   
-  /**
-   * Movement pattern with sound and visual effect at the end of each move.
-   * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
-   * @param {string} position - The target letter/position key
-   */
-  static async movePatternAnimationEnd(position) {
-    const soundToPlay = game.settings.get("ouija-board-for-sequencer", "end_move_sound");
-    const sound_volume = game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume");
-    const animationEnd = game.settings.get("ouija-board-for-sequencer", "end_animation");
-    const xyPosition = this.sceneMap(position);
-
-    const ray = new foundry.canvas.geometry.Ray(
-      { x: ouija_token.x, y: ouija_token.y },
-      ouija_map.bottomLocation
-    );
-    const rotationDeg = Math.toDegrees(ray.angle);
-
-    await this._animatedMove(xyPosition, moveSpeed);
-    await ouija_token.document.update({ rotation: rotationDeg });
-
-    await new Sequence()
-      .sound(soundToPlay)
-        .volume(sound_volume)
-      .effect()
-        .file(animationEnd)
-        .atLocation(ouija_token)
-        .scale(0.55)
-      .waitUntilFinished()
-      .wait(extraTimeMin, extraTimeMax)
-      .play();
+      await new Sequence()
+        .sound(soundToPlay)
+          .volume(sound_volume)
+        .wait(200)
+        .wait(extraTimeMin, extraTimeMax)
+        .play();
+    }
   }
 
   /* ---------------------------------------------
@@ -654,9 +640,9 @@ export class ouija {
     const templateData = {
       moveSoundPath:    game.settings.get(ns, "move_sound"),
       moveSoundVolume:  game.settings.get(ns, "move_sound_volume"),
+      useEndSound:      game.settings.get(ns, "use_end_sound"),
       endSoundPath:     game.settings.get(ns, "end_move_sound"),
       endSoundVolume:   game.settings.get(ns, "end_move_sound_volume"),
-      endAnimationPath: game.settings.get(ns, "end_animation"),
     };
 
     const template = await foundry.applications.handlebars.renderTemplate(
@@ -665,10 +651,9 @@ export class ouija {
     );
 
     await foundry.applications.api.DialogV2.wait({
-      window: { title: "Ouija Board — Sound & Animation" },
+      window: { title: "Ouija Board — Sound" },
       content: template,
       render: (event, app) => {
-        // app is the DialogV2 instance; app.element is the root HTMLElement
         const el = app.element;
 
         // Wire up range slider live display updates
@@ -683,11 +668,21 @@ export class ouija {
           }
         }
 
-        // Wire up FilePicker buttons — reads data-target and data-type to avoid hardcoding per button
+        // Toggle visibility of end sound fields based on checkbox state
+        const toggle = el.querySelector("#ouija-use-end-sound");
+        const endSection = el.querySelector("#ouija-end-sound-section");
+        if (toggle && endSection) {
+          endSection.style.display = toggle.checked ? "" : "none";
+          toggle.addEventListener("change", () => {
+            endSection.style.display = toggle.checked ? "" : "none";
+          });
+        }
+
+        // Wire up FilePicker buttons
         el.querySelectorAll(".ouija-browse-btn").forEach(btn => {
           btn.addEventListener("click", () => {
             const targetId = btn.dataset.target;
-            const pickerType = btn.dataset.type; // "audio" or "imagevideo"
+            const pickerType = btn.dataset.type;
             const targetInput = el.querySelector(`#${targetId}`);
             if (!targetInput) return;
 
@@ -707,10 +702,10 @@ export class ouija {
             const el = dialog.element;
             await game.settings.set(ns, "move_sound",            el.querySelector("#ouija-sound-move").value.trim());
             await game.settings.set(ns, "move_sound_volume",     Math.round(Number(el.querySelector("#ouija-volume-move").value) * 10) / 10);
+            await game.settings.set(ns, "use_end_sound",         el.querySelector("#ouija-use-end-sound").checked);
             await game.settings.set(ns, "end_move_sound",        el.querySelector("#ouija-sound-end").value.trim());
             await game.settings.set(ns, "end_move_sound_volume", Math.round(Number(el.querySelector("#ouija-volume-end").value) * 10) / 10);
-            await game.settings.set(ns, "end_animation",         el.querySelector("#ouija-animation-end").value.trim());
-            ui.notifications.notify("Ouija Board: Sound & Animation settings saved.");
+            ui.notifications.notify("Ouija Board: Sound settings saved.");
           }
         },
         {

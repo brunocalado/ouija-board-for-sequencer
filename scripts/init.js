@@ -10,6 +10,16 @@ Hooks.once('init', () => {
   // --------------------------------------------------
   // Module Options
 
+  // call this with: game.settings.get("ouija-board-for-sequencer", "persistent_dialog")
+  game.settings.register(moduleName, 'persistent_dialog', {
+    name: 'Persistent Dialog',
+    hint: 'When enabled, the control dialog stays open after clicking Move. When disabled, it closes after each move.',
+    scope: 'world',
+    config: true,
+    default: true,
+    type: Boolean
+  });
+
   // call this with: game.settings.get("ouija-board-for-sequencer", "move_sound");
   game.settings.register(moduleName, 'move_sound', {
     name: 'Move Sound',
@@ -42,7 +52,7 @@ Hooks.once('init', () => {
     hint: 'This sound is played when you trigger the move type end.',
     scope: 'world',
     config: false,
-    default: 'modules/sequencer/samples/OujiaBoard/assets/sounds/intensive-stare.ogg',
+    default: 'modules/ouija-board-for-sequencer/assets/sounds/intensive-stare.ogg',
     type: String,
     filePicker: 'audio'
   });
@@ -62,43 +72,42 @@ Hooks.once('init', () => {
     type: Number
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "end_animation");
-  game.settings.register(moduleName, 'end_animation', {
-    name: 'End Animation',
-    hint: 'This animation will happen at the end of the movement.',
+  // call this with: game.settings.get("ouija-board-for-sequencer", "use_end_sound")
+  game.settings.register(moduleName, 'use_end_sound', {
+    name: 'Use End Sound',
+    hint: 'When enabled, the end sound replaces the normal move sound.',
     scope: 'world',
     config: false,
-    default: 'modules/ouija-board-for-sequencer/assets/animation/TollTheDeadSkullSmoke_01_Regular_Grey_400x400.webm',
-    type: String,
-    filePicker: 'imagevideo'
-  });  
+    default: true,
+    type: Boolean
+  });
 
   // call this with: game.settings.get("ouija-board-for-sequencer", "extra_time_min_default")
   game.settings.register(moduleName, 'extra_time_min_default', {
-    name: 'Extra time minimum default', // 
+    name: 'Extra time minimum default',
     hint: 'This will define the minimum amount of extra time for next move start to execute.',
     scope: 'world',
-    config: true,
-    default: 1, 
+    config: false,
+    default: 1,
     type: Number
   });
-  
+
   // call this with: game.settings.get("ouija-board-for-sequencer", "extra_time_max_default")
   game.settings.register(moduleName, 'extra_time_max_default', {
-    name: 'Extra time maximum default', // 
-    hint: 'This will define the maximum amount of extra time for next move start to execute.', 
+    name: 'Extra time maximum default',
+    hint: 'This will define the maximum amount of extra time for next move start to execute.',
     scope: 'world',
-    config: true,
-    default: 1, 
+    config: false,
+    default: 1,
     type: Number
   });
-  
+
   // call this with: game.settings.get("ouija-board-for-sequencer", "move_speed_default")
   game.settings.register(moduleName, 'move_speed_default', {
-    name: 'Move Speed', // 
-    hint: "This will define the time to make the movement. This will result in control the speed. It's milliseconds (higher number, slow movement.)", 
+    name: 'Move Speed',
+    hint: "This will define the time to make the movement. This will result in control the speed. It's milliseconds (higher number, slow movement.)",
     scope: 'world',
-    config: true,
+    config: false,
     default: 1000, 
     type: Number
   });  
@@ -235,13 +244,13 @@ Hooks.on('renderSettingsConfig', (app, html) => {
   const soundButtonDiv = document.createElement('div');
   soundButtonDiv.classList.add('form-group');
   soundButtonDiv.innerHTML = `
-    <label>Sound &amp; Animation</label>
+    <label>Sound</label>
     <div class="form-fields">
       <button type="button" id="ouija-open-sound-editor">
-        <i class="fas fa-volume-up"></i> Edit Sound &amp; Animation
+        <i class="fas fa-volume-up"></i> Edit Sound
       </button>
     </div>
-    <p class="hint">Configure movement sounds and end animation.</p>
+    <p class="hint">Configure movement sounds.</p>
   `;
 
   const firstGroup = moduleSection.querySelector('.form-group');

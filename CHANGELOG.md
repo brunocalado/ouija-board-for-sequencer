@@ -1,3 +1,11 @@
+# 0.2.8
+
+- [Changed] Control dialog now stays open after clicking Move; only closes on Cancel or X
+- [Changed] Delay Min, Delay Max, and Move Speed values are persisted on each Move and pre-filled on next open
+- [Removed] Move Type selector (Standard is now the only behaviour)
+- [Added] Toggle in Sound editor to enable/disable end sound (on by default, replaces normal move sound)
+- [Removed] End animation feature and setting
+
 # 0.2.6
 
 - [Added] Board coordinate map stored in module settings with default map pre-loaded
