@@ -1,14 +1,7 @@
-2026/04/09-09:37:02.128 5ae8 Recovering log #299
-2026/04/09-09:37:02.131 5ae8 Delete type=0 #299
-2026/04/09-09:37:02.131 5ae8 Delete type=3 #297
-2026/04/09-10:29:44.517 df8 Level-0 table #305: started
-2026/04/09-10:29:44.518 df8 Level-0 table #305: 899 bytes OK
-2026/04/09-10:29:44.519 df8 Delete type=0 #303
-2026/04/09-10:29:44.522 df8 Manual compaction at level-0 from '!macros!3TvObpeOAdbRgDY8' @ 72057594037927935 : 1 .. '!macros!tIh0v5W9Jxbqiv8l' @ 0 : 0; will stop at '!macros!tIh0v5W9Jxbqiv8l' @ 12 : 1
-2026/04/09-10:29:44.522 df8 Compacting 1@0 + 1@1 files
-2026/04/09-10:29:44.524 df8 Generated table #306@0: 2 keys, 845 bytes
-2026/04/09-10:29:44.524 df8 Compacted 1@0 + 1@1 files => 845 bytes
-2026/04/09-10:29:44.525 df8 compacted to: files[ 0 1 0 0 0 0 0 ]
-2026/04/09-10:29:44.525 df8 Delete type=2 #301
-2026/04/09-10:29:44.526 df8 Delete type=2 #305
-2026/04/09-10:29:44.529 df8 Manual compaction at level-0 from '!macros!tIh0v5W9Jxbqiv8l' @ 12 : 1 .. '!macros!tIh0v5W9Jxbqiv8l' @ 0 : 0; will stop at (end)
+2026/04/09-10:30:23.756 5250 Recovering log #304
+2026/04/09-10:30:23.759 5250 Delete type=0 #304
+2026/04/09-10:30:23.760 5250 Delete type=3 #302
+2026/04/09-10:51:46.713 df8 Level-0 table #310: started
+2026/04/09-10:51:46.713 df8 Level-0 table #310: 0 bytes OK
+2026/04/09-10:51:46.714 df8 Delete type=0 #308
+2026/04/09-10:51:46.718 df8 Manual compaction at level-0 from '!macros!3TvObpeOAdbRgDY8' @ 72057594037927935 : 1 .. '!macros!tIh0v5W9Jxbqiv8l' @ 0 : 0; will stop at (end)
