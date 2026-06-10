@@ -2,9 +2,13 @@
 This module let you simulate a Ouija Board for your players.
 
 ## Demonstration
+
 [![Demonstration](assets/guide/video-thumbnail.webp)](https://youtu.be/bOmA8z9-R-o)
 
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donate-red?style=for-the-badge&logo=buy-me-a-coffee)](https://buymeacoffee.com/mestredigital)
+
 # How to Install
+
 1. Go to modules and use the link: 
 
 ```js
@@ -13,13 +17,16 @@ https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/mod
 
 
 ## Instructions
+
 There is a compendium with journals with instructions. Read it!
 
 # Community
+
 - If you want to share an art you made and have permission to distribute [click here](https://github.com/brunocalado/ouija-board-for-sequencer/issues)
 - You can report bugs, request features at [issues](https://github.com/brunocalado/ouija-board-for-sequencer/issues)
 
 # Acknowledges
+
 - Piloto de Mouse (Heber Maia)
 - Cefas, GURPS and CSS guy.
 - Erich Matos Viegas
@@ -29,9 +36,11 @@ There is a compendium with journals with instructions. Read it!
 - https://github.com/KenGitsIt
 
 # Changelog
+
 You can check changes at [CHANGELOG](CHANGELOG.md)
 
 # License
+
 - Sound: https://99sounds.org/license/
 - Image: https://pixabay.com/service/license/
 - Designer: Matheus Moreno Mota

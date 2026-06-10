@@ -3,18 +3,19 @@
   "title": "Ouija Board for Sequencer",
   "description": "This module let you simulate a Ouija Board for your players.",
 
-  "authors": [{
-    "name": "Mestre Digital",
-    "url": "https://youtube.com/mestredigital"
-  }],
+  "authors": [
+    {
+      "name": "Mestre Digital",
+      "url": "http://youtube.com/@mestredigital",
+      "flags": {}
+    }
+  ],
   
-  "flags": {},
-  
-  "version": "0.3.0",
+  "version": "0.4.0",
   
   "compatibility": {
-    "minimum": 13,
-    "verified": 13
+    "minimum": 14,
+    "verified": 14
   },
   
   "esmodules": ["/scripts/init.js"],
@@ -65,7 +66,7 @@
       "type": "module",
       "manifest": "https://github.com/Haxxer/FoundryVTT-Sequencer/releases/latest/download/module.json",
       "compatibility": {
-        "minimum": "3.3.0"
+        "minimum": "4.2.0"
       }
     }]
   },
