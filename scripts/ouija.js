@@ -1,25 +1,19 @@
+import { MODULE_ID, SETTINGS, CUSTOM_LABEL_KEYS } from './constants.js';
 import { DEFAULT_MAP } from './map-default.js';
 
 let ouija_map;
 let ouija_token;
-let extraTimeMin=1;
-let extraTimeMax=1;
-let moveSpeed=1000;
+let extraTimeMin = 1;
+let extraTimeMax = 1;
+let moveSpeed = 1000;
 
-// const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
 export class ouija {
 
-  /* ---------------------------------------------
-  // main: 
-    const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-    ouija.main();
-  */
   /**
    * Main entry point for the Ouija board dialog.
    * @param {Object|null} map - Optional board coordinate map. If omitted, reads from settings.
    */
   static async main(map = null) {
-    // If no map passed, read from settings
     if (!map) {
       map = this._parseMap();
       if (!map) return;
@@ -29,7 +23,7 @@ export class ouija {
       // Priority 1: use the token the user has selected
       ouija_token = canvas.tokens.controlled[0];
     } else {
-      // Priority 2: fall back to the first token in the scene that has an actor
+      // Priority 2: fall back to the first token in the scene
       const fallback = canvas.tokens.placeables[0];
       if (!fallback) {
         ui.notifications.error("You must have a token in the scene!");
@@ -39,36 +33,24 @@ export class ouija {
     }
 
     ouija_map = map;
-    canvas.tokens.releaseAll(); // unselect the token
-    
-    const extraTimeMinDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_min_default");
-    const extraTimeMaxDefault=game.settings.get("ouija-board-for-sequencer", "extra_time_max_default");
-    const moveSpeedDefault=game.settings.get("ouija-board-for-sequencer", "move_speed_default");    
-    const customPositionLabel1=game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
-    const customPositionLabel2=game.settings.get("ouija-board-for-sequencer", "custom_position_label_2");
-    const customPositionLabel3=game.settings.get("ouija-board-for-sequencer", "custom_position_label_3");
-    const customPositionLabel4=game.settings.get("ouija-board-for-sequencer", "custom_position_label_4");
-    const customPositionLabel5=game.settings.get("ouija-board-for-sequencer", "custom_position_label_5");
-    const customPositionLabel6=game.settings.get("ouija-board-for-sequencer", "custom_position_label_6");
-    const customPositionLabel7=game.settings.get("ouija-board-for-sequencer", "custom_position_label_7");
-    const customPositionLabel8=game.settings.get("ouija-board-for-sequencer", "custom_position_label_8");    
-    const customPositionLabel9=game.settings.get("ouija-board-for-sequencer", "custom_position_label_9");    
-    const templateData = {
-      extraTimeMinDefault: extraTimeMinDefault, extraTimeMaxDefault: extraTimeMaxDefault, moveSpeedDefault: moveSpeedDefault,
-      customPositionLabel1: customPositionLabel1,
-      customPositionLabel2: customPositionLabel2,
-      customPositionLabel3: customPositionLabel3,
-      customPositionLabel4: customPositionLabel4,
-      customPositionLabel5: customPositionLabel5,
-      customPositionLabel6: customPositionLabel6,
-      customPositionLabel7: customPositionLabel7,
-      customPositionLabel8: customPositionLabel8,
-      customPositionLabel9: customPositionLabel9
-    };
+    canvas.tokens.releaseAll();
 
-    const template = await foundry.applications.handlebars.renderTemplate(`modules/ouija-board-for-sequencer/templates/main-dialog.hbs`, templateData);
+    const extraTimeMinDefault = game.settings.get(MODULE_ID, SETTINGS.EXTRA_TIME_MIN);
+    const extraTimeMaxDefault = game.settings.get(MODULE_ID, SETTINGS.EXTRA_TIME_MAX);
+    const moveSpeedDefault    = game.settings.get(MODULE_ID, SETTINGS.MOVE_SPEED);
 
-    const persistent = game.settings.get("ouija-board-for-sequencer", "persistent_dialog");
+    const customLabels = Object.fromEntries(
+      CUSTOM_LABEL_KEYS.map((key, i) => [`customPositionLabel${i + 1}`, game.settings.get(MODULE_ID, key)])
+    );
+
+    const templateData = { extraTimeMinDefault, extraTimeMaxDefault, moveSpeedDefault, ...customLabels };
+
+    const template = await foundry.applications.handlebars.renderTemplate(
+      `modules/${MODULE_ID}/templates/main-dialog.hbs`,
+      templateData
+    );
+
+    const persistent = game.settings.get(MODULE_ID, SETTINGS.PERSISTENT_DIALOG);
 
     if (persistent) {
       const dialog = new foundry.applications.api.DialogV2({
@@ -113,17 +95,17 @@ export class ouija {
   }
 
   static async moveThing(html) {
-    const messageType = html.querySelector('input[name="extra_position"]:checked').value;
-    const autoMessage = html.querySelector("#message").value;
-    extraTimeMin = parseInt(html.querySelector("#extraTimeMin").value);
-    extraTimeMax = parseInt(html.querySelector("#extraTimeMax").value);
-    moveSpeed = parseInt(html.querySelector("#moveSpeed").value);
+    const messageType    = html.querySelector('input[name="extra_position"]:checked').value;
+    const autoMessage    = html.querySelector("#message").value;
+    extraTimeMin         = parseInt(html.querySelector("#extraTimeMin").value);
+    extraTimeMax         = parseInt(html.querySelector("#extraTimeMax").value);
+    moveSpeed            = parseInt(html.querySelector("#moveSpeed").value);
     const customPosition = html.querySelector('#custom_position').value;
 
     // Persist current values so next dialog open pre-fills them
-    await game.settings.set("ouija-board-for-sequencer", "extra_time_min_default", extraTimeMin);
-    await game.settings.set("ouija-board-for-sequencer", "extra_time_max_default", extraTimeMax);
-    await game.settings.set("ouija-board-for-sequencer", "move_speed_default", moveSpeed);
+    await game.settings.set(MODULE_ID, SETTINGS.EXTRA_TIME_MIN, extraTimeMin);
+    await game.settings.set(MODULE_ID, SETTINGS.EXTRA_TIME_MAX, extraTimeMax);
+    await game.settings.set(MODULE_ID, SETTINGS.MOVE_SPEED, moveSpeed);
 
     if (messageType === 'message' && customPosition === 'custom_position_choose') {
       await this.sendMessage(autoMessage.toLowerCase());
@@ -158,12 +140,12 @@ export class ouija {
   static async sendToPosition(letter, isLast = true) {
     await this.movePattern1(letter, isLast);
   }
-  
+
   /**
    * Converts a desired animation duration (ms) into the grid-squares/second speed
    * that CONFIG.Token.movement.defaultSpeed expects, so the token takes exactly
    * `durationMs` to reach `to` from `from`.
-   * This is the only v13-safe way to control movement animation duration:
+   * This is the only v14-safe way to control movement animation duration:
    * TokenDocument#move() ignores `duration` options, and Sequencer .moveTowards()
    * uses the deprecated `teleport` flag internally.
    * @param {{x: number, y: number}} from - Origin canvas position in pixels
@@ -181,7 +163,7 @@ export class ouija {
   }
 
   /**
-   * Performs a single animated token move using the v13 native API with a controlled
+   * Performs a single animated token move using the v14 native API with a controlled
    * duration. TokenDocument#move() ignores `duration` options, so we temporarily
    * override CONFIG.Token.movement.defaultSpeed (grid squares/sec) with a value
    * derived from the pixel distance and desired duration, then restore it once the
@@ -214,6 +196,8 @@ export class ouija {
    */
   static async jiggle(letter, isLast = false) {
     const xyPosition = this.sceneMap(letter);
+    if (!xyPosition) return;
+
     const jigglePos = { x: xyPosition.x - 15, y: xyPosition.y - 25 };
 
     // Cap jiggle duration so it stays snappy regardless of the global moveSpeed setting.
@@ -227,7 +211,7 @@ export class ouija {
 
   /**
    * Standard movement pattern: move token, rotate toward bottom, play sound.
-   * When the "Use End Sound" toggle is enabled, plays the end sound and animation
+   * When the "Use End Sound" toggle is enabled, plays the end sound on the final move
    * instead of the normal move sound.
    * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
    * @param {string} position - The target letter/position key
@@ -236,9 +220,13 @@ export class ouija {
    *   Defaults to true so standalone calls (single-position moves) always honour the setting.
    */
   static async movePattern1(position, isLast = true) {
-    const ns = "ouija-board-for-sequencer";
-    const useEndSound = game.settings.get(ns, "use_end_sound");
     const xyPosition = this.sceneMap(position);
+    if (!xyPosition) {
+      console.warn(`${MODULE_ID} | Unknown position key: "${position}" — skipped`);
+      return;
+    }
+
+    const useEndSound = game.settings.get(MODULE_ID, SETTINGS.USE_END_SOUND);
 
     const ray = new foundry.canvas.geometry.Ray(
       { x: ouija_token.x, y: ouija_token.y },
@@ -249,144 +237,85 @@ export class ouija {
     await this._animatedMove(xyPosition, moveSpeed);
     await ouija_token.document.update({ rotation: rotationDeg });
 
-    // Use end sound only on the final move of a sequence, when the setting is enabled.
-    if (useEndSound && isLast) {
-      const soundToPlay = game.settings.get(ns, "end_move_sound");
-      const sound_volume = game.settings.get(ns, "end_move_sound_volume");
+    const soundKey  = (useEndSound && isLast) ? SETTINGS.END_MOVE_SOUND        : SETTINGS.MOVE_SOUND;
+    const volumeKey = (useEndSound && isLast) ? SETTINGS.END_MOVE_SOUND_VOLUME  : SETTINGS.MOVE_SOUND_VOLUME;
+    const soundToPlay  = game.settings.get(MODULE_ID, soundKey);
+    const sound_volume = game.settings.get(MODULE_ID, volumeKey);
 
-      await new Sequence()
-        .sound(soundToPlay)
-          .volume(sound_volume)
-        .wait(200)
-        .wait(extraTimeMin, extraTimeMax)
-        .play();
-    } else {
-      const soundToPlay = game.settings.get(ns, "move_sound");
-      const sound_volume = game.settings.get(ns, "move_sound_volume");
+    await new Sequence()
+      .sound(soundToPlay)
+        .volume(sound_volume)
+      .wait(200)
+      .wait(extraTimeMin, extraTimeMax)
+      .play();
+  }
 
-      await new Sequence()
-        .sound(soundToPlay)
-          .volume(sound_volume)
-        .wait(200)
-        .wait(extraTimeMin, extraTimeMax)
-        .play();
+  /**
+   * Returns the canvas coordinates for a board position key, or null if unmapped.
+   * Unknown characters (e.g. punctuation in a typed message) are silently skipped
+   * by callers; explicit unknown keys emit a console.warn.
+   * @param {string} position - Board position key (e.g. 'a', '1', 'position_yes')
+   * @returns {{x: number, y: number}|null}
+   */
+  static sceneMap(position) {
+    switch (position) {
+      case 'a': return ouija_map.letter_a;
+      case 'b': return ouija_map.letter_b;
+      case 'c': return ouija_map.letter_c;
+      case 'd': return ouija_map.letter_d;
+      case 'e': return ouija_map.letter_e;
+      case 'f': return ouija_map.letter_f;
+      case 'g': return ouija_map.letter_g;
+      case 'h': return ouija_map.letter_h;
+      case 'i': return ouija_map.letter_i;
+      case 'j': return ouija_map.letter_j;
+      case 'k': return ouija_map.letter_k;
+      case 'l': return ouija_map.letter_l;
+      case 'm': return ouija_map.letter_m;
+      case 'n': return ouija_map.letter_n;
+      case 'o': return ouija_map.letter_o;
+      case 'p': return ouija_map.letter_p;
+      case 'q': return ouija_map.letter_q;
+      case 'r': return ouija_map.letter_r;
+      case 's': return ouija_map.letter_s;
+      case 't': return ouija_map.letter_t;
+      case 'u': return ouija_map.letter_u;
+      case 'v': return ouija_map.letter_v;
+      case 'w': return ouija_map.letter_w;
+      case 'x': return ouija_map.letter_x;
+      case 'y': return ouija_map.letter_y;
+      case 'z': return ouija_map.letter_z;
+      case '0': return ouija_map.number_0;
+      case '1': return ouija_map.number_1;
+      case '2': return ouija_map.number_2;
+      case '3': return ouija_map.number_3;
+      case '4': return ouija_map.number_4;
+      case '5': return ouija_map.number_5;
+      case '6': return ouija_map.number_6;
+      case '7': return ouija_map.number_7;
+      case '8': return ouija_map.number_8;
+      case '9': return ouija_map.number_9;
+      case ' ':            return ouija_map.symbol_space;
+      case 'position_yes': return ouija_map.symbol_yes;
+      case 'position_no':  return ouija_map.symbol_no;
+      case 'position_01':  return ouija_map.symbol_01;
+      case 'position_02':  return ouija_map.symbol_02;
+      case 'position_03':  return ouija_map.symbol_03;
+      case 'position_04':  return ouija_map.symbol_04;
+      case 'position_05':  return ouija_map.symbol_05;
+      case 'position_06':  return ouija_map.symbol_06;
+      case 'position_07':  return ouija_map.symbol_07;
+      case 'position_08':  return ouija_map.symbol_08;
+      case 'position_09':  return ouija_map.symbol_09;
+      default:             return null;
     }
   }
 
-  /* ---------------------------------------------
-  // sceneMap: letter will match the map
-    const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-    ouija.sceneMap(position);
-  */
-  static sceneMap(position) {
-    switch (position) {
-      case 'a':
-        return ouija_map.letter_a;
-      case 'b':
-        return ouija_map.letter_b;
-      case 'c':
-        return ouija_map.letter_c;
-      case 'd':
-        return ouija_map.letter_d;
-      case 'e':
-        return ouija_map.letter_e;
-      case 'f':
-        return ouija_map.letter_f;
-      case 'g':
-        return ouija_map.letter_g;
-      case 'h':
-        return ouija_map.letter_h;
-      case 'i':
-        return ouija_map.letter_i;
-      case 'j':
-        return ouija_map.letter_j;
-      case 'k':
-        return ouija_map.letter_k;
-      case 'l':
-        return ouija_map.letter_l;
-      case 'm':
-        return ouija_map.letter_m;
-      case 'n':
-        return ouija_map.letter_n;
-      case 'o':
-        return ouija_map.letter_o;
-      case 'p':
-        return ouija_map.letter_p;
-      case 'q':
-        return ouija_map.letter_q;
-      case 'r':
-        return ouija_map.letter_r;
-      case 's':
-        return ouija_map.letter_s;
-      case 't':
-        return ouija_map.letter_t;
-      case 'u':
-        return ouija_map.letter_u;
-      case 'v':
-        return ouija_map.letter_v;
-      case 'x':
-        return ouija_map.letter_x;
-      case 'z':
-        return ouija_map.letter_z;
-      case 'w':
-        return ouija_map.letter_w;
-      case 'y':
-        return ouija_map.letter_y;
-      case '0':
-        return ouija_map.number_0;
-      case '1':
-        return ouija_map.number_1;
-      case '2':
-        return ouija_map.number_2;
-      case '3':
-        return ouija_map.number_3;
-      case '4':
-        return ouija_map.number_4;
-      case '5':
-        return ouija_map.number_5;
-      case '6':
-        return ouija_map.number_6;
-      case '7':
-        return ouija_map.number_7;
-      case '8':
-        return ouija_map.number_8;
-      case '9':
-        return ouija_map.number_9;
-      case ' ':
-        return ouija_map.symbol_space;
-      case 'position_yes':
-        return ouija_map.symbol_yes;
-      case 'position_no':
-        return ouija_map.symbol_no;
-      case 'position_01':
-        return ouija_map.symbol_01;
-      case 'position_02':
-        return ouija_map.symbol_02;
-      case 'position_03':
-        return ouija_map.symbol_03;
-      case 'position_04':
-        return ouija_map.symbol_04;
-      case 'position_05':
-        return ouija_map.symbol_05;
-      case 'position_06':
-        return ouija_map.symbol_06;
-      case 'position_07':
-        return ouija_map.symbol_07;
-      case 'position_08':
-        return ouija_map.symbol_08;
-      case 'position_09':
-        return ouija_map.symbol_09;        
-      default:
-        ui.notifications.error("666!");
-    };
-  }
-
-  // =============================================
-  /* ---------------------------------------------
-  // Dialog Message: 
-    const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-    ouija.creepyMessage();
-  */
+  /**
+   * Returns a random atmospheric message for display.
+   * Usage: const ouija = game.modules.get(MODULE_ID)?.api.ouija; ouija.creepyMessage();
+   * @returns {string}
+   */
   static creepyMessage() {
     const messages = [
       "Captain Howdy is looking for you",
@@ -403,12 +332,12 @@ export class ouija {
    * @returns {Object|null} The parsed map object or null on failure.
    */
   static _parseMap() {
-    const raw = game.settings.get("ouija-board-for-sequencer", "map_data");
+    const raw = game.settings.get(MODULE_ID, SETTINGS.MAP_DATA);
     try {
       return JSON.parse(raw);
     } catch (e) {
       ui.notifications.error("Ouija Board: Map JSON is invalid. Open Module Settings → Edit Map to fix it.");
-      console.error("ouija-board-for-sequencer | map_data parse error:", e);
+      console.error(`${MODULE_ID} | map_data parse error:`, e);
       return null;
     }
   }
@@ -431,14 +360,14 @@ export class ouija {
   static async openMapEditor() {
     let currentJson;
     try {
-      currentJson = JSON.stringify(JSON.parse(game.settings.get("ouija-board-for-sequencer", "map_data")), null, 2);
+      currentJson = JSON.stringify(JSON.parse(game.settings.get(MODULE_ID, SETTINGS.MAP_DATA)), null, 2);
     } catch (e) {
       // Preserve raw value so a syntax error remains visible to the user for manual correction
-      currentJson = game.settings.get("ouija-board-for-sequencer", "map_data");
+      currentJson = game.settings.get(MODULE_ID, SETTINGS.MAP_DATA);
     }
 
     const template = await foundry.applications.handlebars.renderTemplate(
-      "modules/ouija-board-for-sequencer/templates/map-editor.hbs",
+      `modules/${MODULE_ID}/templates/map-editor.hbs`,
       { mapJson: currentJson }
     );
 
@@ -460,7 +389,7 @@ export class ouija {
               return false;
             }
             const normalizedJson = JSON.stringify(parsed, null, 2);
-            await game.settings.set("ouija-board-for-sequencer", "map_data", normalizedJson);
+            await game.settings.set(MODULE_ID, SETTINGS.MAP_DATA, normalizedJson);
             ui.notifications.notify("Ouija Board: Map saved successfully.");
           }
         },
@@ -469,7 +398,7 @@ export class ouija {
           action: "reset",
           callback: async (event, button, dialog) => {
             const defaultJson = JSON.stringify(DEFAULT_MAP, null, 2);
-            await game.settings.set("ouija-board-for-sequencer", "map_data", defaultJson);
+            await game.settings.set(MODULE_ID, SETTINGS.MAP_DATA, defaultJson);
             ui.notifications.notify("Ouija Board: Map reset to default.");
             const textarea = dialog.element.querySelector("#ouija-map-json");
             if (textarea) textarea.value = defaultJson;
@@ -490,25 +419,13 @@ export class ouija {
    * Triggered from the injected button in the module settings UI.
    */
   static async openLabelEditor() {
-    const keys = [
-      'custom_position_label_1',
-      'custom_position_label_2',
-      'custom_position_label_3',
-      'custom_position_label_4',
-      'custom_position_label_5',
-      'custom_position_label_6',
-      'custom_position_label_7',
-      'custom_position_label_8',
-      'custom_position_label_9',
-    ];
-
-    const labels = keys.map((key, i) => ({
+    const labels = CUSTOM_LABEL_KEYS.map((key, i) => ({
       number: i + 1,
-      value: game.settings.get("ouija-board-for-sequencer", key)
+      value: game.settings.get(MODULE_ID, key)
     }));
 
     const template = await foundry.applications.handlebars.renderTemplate(
-      "modules/ouija-board-for-sequencer/templates/label-editor.hbs",
+      `modules/${MODULE_ID}/templates/label-editor.hbs`,
       { labels }
     );
 
@@ -520,12 +437,12 @@ export class ouija {
           label: "Save",
           action: "save",
           callback: async (event, button, dialog) => {
-            for (let i = 0; i < keys.length; i++) {
+            for (let i = 0; i < CUSTOM_LABEL_KEYS.length; i++) {
               const input = dialog.element.querySelector(`#ouija-label-${i}`);
               if (!input) continue;
               // slice enforces the 30-char limit server-side in case this is called programmatically
               const val = input.value.trim().slice(0, 30);
-              await game.settings.set("ouija-board-for-sequencer", keys[i], val);
+              await game.settings.set(MODULE_ID, CUSTOM_LABEL_KEYS[i], val);
             }
             ui.notifications.notify("Ouija Board: Labels saved successfully.");
           }
@@ -544,18 +461,16 @@ export class ouija {
    * Triggered from the injected button in the module settings UI.
    */
   static async openSoundEditor() {
-    const ns = "ouija-board-for-sequencer";
-
     const templateData = {
-      moveSoundPath:    game.settings.get(ns, "move_sound"),
-      moveSoundVolume:  game.settings.get(ns, "move_sound_volume"),
-      useEndSound:      game.settings.get(ns, "use_end_sound"),
-      endSoundPath:     game.settings.get(ns, "end_move_sound"),
-      endSoundVolume:   game.settings.get(ns, "end_move_sound_volume"),
+      moveSoundPath:   game.settings.get(MODULE_ID, SETTINGS.MOVE_SOUND),
+      moveSoundVolume: game.settings.get(MODULE_ID, SETTINGS.MOVE_SOUND_VOLUME),
+      useEndSound:     game.settings.get(MODULE_ID, SETTINGS.USE_END_SOUND),
+      endSoundPath:    game.settings.get(MODULE_ID, SETTINGS.END_MOVE_SOUND),
+      endSoundVolume:  game.settings.get(MODULE_ID, SETTINGS.END_MOVE_SOUND_VOLUME),
     };
 
     const template = await foundry.applications.handlebars.renderTemplate(
-      "modules/ouija-board-for-sequencer/templates/sound-editor.hbs",
+      `modules/${MODULE_ID}/templates/sound-editor.hbs`,
       templateData
     );
 
@@ -570,7 +485,7 @@ export class ouija {
           ["ouija-volume-move", "ouija-volume-move-display"],
           ["ouija-volume-end",  "ouija-volume-end-display"],
         ]) {
-          const range = el.querySelector(`#${rangeId}`);
+          const range   = el.querySelector(`#${rangeId}`);
           const display = el.querySelector(`#${displayId}`);
           if (range && display) {
             range.addEventListener("input", () => { display.textContent = range.value; });
@@ -578,7 +493,7 @@ export class ouija {
         }
 
         // Toggle visibility of end sound fields based on checkbox state
-        const toggle = el.querySelector("#ouija-use-end-sound");
+        const toggle     = el.querySelector("#ouija-use-end-sound");
         const endSection = el.querySelector("#ouija-end-sound-section");
         if (toggle && endSection) {
           endSection.style.display = toggle.checked ? "" : "none";
@@ -587,16 +502,14 @@ export class ouija {
           });
         }
 
-        // Wire up FilePicker buttons
+        // Resolve the active FilePicker implementation so host environments can substitute their own.
+        const FilePickerClass = foundry.applications.apps.FilePicker.implementation ?? foundry.applications.apps.FilePicker;
         el.querySelectorAll(".ouija-browse-btn").forEach(btn => {
           btn.addEventListener("click", () => {
-            const targetId = btn.dataset.target;
-            const pickerType = btn.dataset.type;
-            const targetInput = el.querySelector(`#${targetId}`);
+            const targetInput = el.querySelector(`#${btn.dataset.target}`);
             if (!targetInput) return;
-
-            new FilePicker({
-              type: pickerType,
+            new FilePickerClass({
+              type: btn.dataset.type,
               current: targetInput.value,
               callback: (path) => { targetInput.value = path; }
             }).browse();
@@ -609,11 +522,11 @@ export class ouija {
           action: "save",
           callback: async (event, button, dialog) => {
             const el = dialog.element;
-            await game.settings.set(ns, "move_sound",            el.querySelector("#ouija-sound-move").value.trim());
-            await game.settings.set(ns, "move_sound_volume",     Math.round(Number(el.querySelector("#ouija-volume-move").value) * 10) / 10);
-            await game.settings.set(ns, "use_end_sound",         el.querySelector("#ouija-use-end-sound").checked);
-            await game.settings.set(ns, "end_move_sound",        el.querySelector("#ouija-sound-end").value.trim());
-            await game.settings.set(ns, "end_move_sound_volume", Math.round(Number(el.querySelector("#ouija-volume-end").value) * 10) / 10);
+            await game.settings.set(MODULE_ID, SETTINGS.MOVE_SOUND,            el.querySelector("#ouija-sound-move").value.trim());
+            await game.settings.set(MODULE_ID, SETTINGS.MOVE_SOUND_VOLUME,     Math.round(Number(el.querySelector("#ouija-volume-move").value) * 10) / 10);
+            await game.settings.set(MODULE_ID, SETTINGS.USE_END_SOUND,         el.querySelector("#ouija-use-end-sound").checked);
+            await game.settings.set(MODULE_ID, SETTINGS.END_MOVE_SOUND,        el.querySelector("#ouija-sound-end").value.trim());
+            await game.settings.set(MODULE_ID, SETTINGS.END_MOVE_SOUND_VOLUME, Math.round(Number(el.querySelector("#ouija-volume-end").value) * 10) / 10);
             ui.notifications.notify("Ouija Board: Sound settings saved.");
           }
         },
@@ -632,7 +545,6 @@ export class ouija {
    * Re-reads map_data fresh inside the save callback to avoid stale-closure overwrites
    * if the Map Editor was used concurrently.
    * Called from the injected button in module settings and via Ouija.capturePosition().
-   * Triggered by the renderSettingsConfig hook or directly from a macro.
    */
   static async openCapturePositionEditor() {
     if (!canvas.tokens.controlled[0]) {
@@ -640,14 +552,14 @@ export class ouija {
       return;
     }
 
-    const token = canvas.tokens.controlled[0];
+    const token    = canvas.tokens.controlled[0];
     const currentX = token.position.x;
     const currentY = token.position.y;
 
     // Read map now only to build the combobox key list; actual save re-reads a fresh copy.
     let mapKeys;
     try {
-      mapKeys = Object.keys(JSON.parse(game.settings.get("ouija-board-for-sequencer", "map_data")));
+      mapKeys = Object.keys(JSON.parse(game.settings.get(MODULE_ID, SETTINGS.MAP_DATA)));
     } catch (e) {
       ui.notifications.error("Ouija Board: Map JSON is invalid. Fix it in the Map Editor first.");
       return;
@@ -655,13 +567,10 @@ export class ouija {
 
     // Build label lookup for symbol_01 through symbol_09.
     const symbolLabelMap = {};
-    for (let i = 1; i <= 9; i++) {
-      const settingKey = `custom_position_label_${i}`;
-      const label = game.settings.get("ouija-board-for-sequencer", settingKey);
-      if (label && label.trim() !== "") {
-        symbolLabelMap[`symbol_0${i}`] = label.trim();
-      }
-    }
+    CUSTOM_LABEL_KEYS.forEach((key, i) => {
+      const label = game.settings.get(MODULE_ID, key);
+      if (label?.trim()) symbolLabelMap[`symbol_0${i + 1}`] = label.trim();
+    });
 
     // Build option array: { key, label } — label falls back to the raw key.
     const mapOptions = mapKeys.map(key => ({
@@ -670,7 +579,7 @@ export class ouija {
     }));
 
     const template = await foundry.applications.handlebars.renderTemplate(
-      "modules/ouija-board-for-sequencer/templates/capture-position.hbs",
+      `modules/${MODULE_ID}/templates/capture-position.hbs`,
       { mapOptions, currentX, currentY }
     );
 
@@ -682,10 +591,10 @@ export class ouija {
           label: "Save to Map",
           action: "save",
           callback: async (event, button, dialog) => {
-            const el = dialog.element;
+            const el         = dialog.element;
             const selectedKey = el.querySelector("#ouija-capture-key").value;
-            const xVal = parseFloat(el.querySelector("#ouija-capture-x").value);
-            const yVal = parseFloat(el.querySelector("#ouija-capture-y").value);
+            const xVal        = parseFloat(el.querySelector("#ouija-capture-x").value);
+            const yVal        = parseFloat(el.querySelector("#ouija-capture-y").value);
 
             if (!selectedKey) {
               ui.notifications.error("Select a position key before saving.");
@@ -699,7 +608,7 @@ export class ouija {
             // Re-read fresh copy to avoid overwriting concurrent Map Editor changes.
             let freshMap;
             try {
-              freshMap = JSON.parse(game.settings.get("ouija-board-for-sequencer", "map_data"));
+              freshMap = JSON.parse(game.settings.get(MODULE_ID, SETTINGS.MAP_DATA));
             } catch (e) {
               ui.notifications.error("Map JSON became invalid. Aborting save.");
               return false;
@@ -707,8 +616,8 @@ export class ouija {
 
             freshMap[selectedKey] = { x: xVal, y: yVal };
             await game.settings.set(
-              "ouija-board-for-sequencer",
-              "map_data",
+              MODULE_ID,
+              SETTINGS.MAP_DATA,
               JSON.stringify(freshMap, null, 2)
             );
             ui.notifications.notify(`Ouija Board: "${selectedKey}" saved → { x: ${xVal}, y: ${yVal} }`);

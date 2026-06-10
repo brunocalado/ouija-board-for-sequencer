@@ -1,18 +1,17 @@
-const moduleName = 'ouija-board-for-sequencer';
+import { MODULE_ID, SETTINGS, CUSTOM_LABEL_KEYS } from './constants.js';
 import { ouija } from './ouija.js';
 import { DEFAULT_MAP } from './map-default.js';
 
 Hooks.once('init', () => {
   // --------------------------------------------------
   // Load API
-  // Request with: const ouija = game.modules.get('ouija-board-for-sequencer')?.api.ouija;
-  game.modules.get(moduleName).api = { ouija }; 
+  // Request with: const ouija = game.modules.get(MODULE_ID)?.api.ouija;
+  game.modules.get(MODULE_ID).api = { ouija };
 
   // --------------------------------------------------
   // Module Options
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "persistent_dialog")
-  game.settings.register(moduleName, 'persistent_dialog', {
+  game.settings.register(MODULE_ID, SETTINGS.PERSISTENT_DIALOG, {
     name: 'Persistent Dialog',
     hint: 'When enabled, the control dialog stays open after clicking Move. When disabled, it closes after each move.',
     scope: 'world',
@@ -21,60 +20,47 @@ Hooks.once('init', () => {
     type: Boolean
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "move_sound");
-  game.settings.register(moduleName, 'move_sound', {
+  game.settings.register(MODULE_ID, SETTINGS.MOVE_SOUND, {
     name: 'Move Sound',
     hint: 'This sound is played each movement.',
     scope: 'world',
     config: false,
-    default: 'modules/ouija-board-for-sequencer/assets/sounds/distant-orchestra.ogg',
+    default: `modules/${MODULE_ID}/assets/sounds/distant-orchestra.ogg`,
     type: String,
     filePicker: 'audio'
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "move_sound_volume")
-  game.settings.register(moduleName, 'move_sound_volume', {
-    name: 'Move Sound Volume', // "Warning Sound Volume"
-    hint: 'You can set the volume for the move sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.', // "You can set the volume for the warning sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume."
+  game.settings.register(MODULE_ID, SETTINGS.MOVE_SOUND_VOLUME, {
+    name: 'Move Sound Volume',
+    hint: 'You can set the volume for the move sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.',
     scope: 'world',
     config: false,
     default: 0.8,
-    range: {
-        min: 0,
-        max: 1,
-        step: 0.1
-    },
+    range: { min: 0, max: 1, step: 0.1 },
     type: Number
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "end_move_sound");
-  game.settings.register(moduleName, 'end_move_sound', {
+  game.settings.register(MODULE_ID, SETTINGS.END_MOVE_SOUND, {
     name: 'End Move Sound',
     hint: 'This sound is played when you trigger the move type end.',
     scope: 'world',
     config: false,
-    default: 'modules/ouija-board-for-sequencer/assets/sounds/intensive-stare.ogg',
+    default: `modules/${MODULE_ID}/assets/sounds/intensive-stare.ogg`,
     type: String,
     filePicker: 'audio'
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "end_move_sound_volume")
-  game.settings.register(moduleName, 'end_move_sound_volume', {
-    name: 'End Move Sound Volume', // "Warning Sound Volume"
-    hint: 'You can set the volume for the move sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.', // "You can set the volume for the warning sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume."
+  game.settings.register(MODULE_ID, SETTINGS.END_MOVE_SOUND_VOLUME, {
+    name: 'End Move Sound Volume',
+    hint: 'You can set the volume for the end sound. Use 0.1 for 10% of the volume. 0.6 for 60% of the volume, and so on.',
     scope: 'world',
     config: false,
     default: 0.9,
-    range: {
-        min: 0,
-        max: 1,
-        step: 0.1
-    },
+    range: { min: 0, max: 1, step: 0.1 },
     type: Number
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "use_end_sound")
-  game.settings.register(moduleName, 'use_end_sound', {
+  game.settings.register(MODULE_ID, SETTINGS.USE_END_SOUND, {
     name: 'Use End Sound',
     hint: 'When enabled, the end sound replaces the normal move sound.',
     scope: 'world',
@@ -83,8 +69,7 @@ Hooks.once('init', () => {
     type: Boolean
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "extra_time_min_default")
-  game.settings.register(moduleName, 'extra_time_min_default', {
+  game.settings.register(MODULE_ID, SETTINGS.EXTRA_TIME_MIN, {
     name: 'Extra time minimum default',
     hint: 'This will define the minimum amount of extra time for next move start to execute.',
     scope: 'world',
@@ -93,8 +78,7 @@ Hooks.once('init', () => {
     type: Number
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "extra_time_max_default")
-  game.settings.register(moduleName, 'extra_time_max_default', {
+  game.settings.register(MODULE_ID, SETTINGS.EXTRA_TIME_MAX, {
     name: 'Extra time maximum default',
     hint: 'This will define the maximum amount of extra time for next move start to execute.',
     scope: 'world',
@@ -103,101 +87,31 @@ Hooks.once('init', () => {
     type: Number
   });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "move_speed_default")
-  game.settings.register(moduleName, 'move_speed_default', {
+  game.settings.register(MODULE_ID, SETTINGS.MOVE_SPEED, {
     name: 'Move Speed',
     hint: "This will define the time to make the movement. This will result in control the speed. It's milliseconds (higher number, slow movement.)",
     scope: 'world',
     config: false,
-    default: 1000, 
+    default: 1000,
     type: Number
-  });  
+  });
 
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
-  game.settings.register(moduleName, 'custom_position_label_1', {
-    name: 'Custom Position Label - 1',
-    hint: 'This will change the label for the Custom Position 1.',
-    scope: 'world',
-    config: false,
-    default: 'Good Bye',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_2");
-  game.settings.register(moduleName, 'custom_position_label_2', {
-    name: 'Custom Position Label - 2',
-    hint: 'This will change the label for the Custom Position 2.',
-    scope: 'world',
-    config: false,
-    default: 'Left Skull',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_3");
-  game.settings.register(moduleName, 'custom_position_label_3', {
-    name: 'Custom Position Label - 3',
-    hint: 'This will change the label for the Custom Position 3.',
-    scope: 'world',
-    config: false,
-    default: 'Sun',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_4");
-  game.settings.register(moduleName, 'custom_position_label_4', {
-    name: 'Custom Position Label - 4',
-    hint: 'This will change the label for the Custom Position 4.',
-    scope: 'world',
-    config: false,
-    default: 'Right Skull',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_1");
-  game.settings.register(moduleName, 'custom_position_label_5', {
-    name: 'Custom Position Label - 5',
-    hint: 'This will change the label for the Custom Position 5.',
-    scope: 'world',
-    config: false,
-    default: 'Moon',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_6");
-  game.settings.register(moduleName, 'custom_position_label_6', {
-    name: 'Custom Position Label - 6',
-    hint: 'This will change the label for the Custom Position 6.',
-    scope: 'world',
-    config: false,
-    default: 'First Candle',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_7");
-  game.settings.register(moduleName, 'custom_position_label_7', {
-    name: 'Custom Position Label - 7',
-    hint: 'This will change the label for the Custom Position 7.',
-    scope: 'world',
-    config: false,
-    default: 'Second Candle',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_8");
-  game.settings.register(moduleName, 'custom_position_label_8', {
-    name: 'Custom Position Label - 8',
-    hint: 'This will change the label for the Custom Position 8.',
-    scope: 'world',
-    config: false,
-    default: 'Key',
-    type: String
-  });
-  // call this with: game.settings.get("ouija-board-for-sequencer", "custom_position_label_9");
-  game.settings.register(moduleName, 'custom_position_label_9', {
-    name: 'Custom Position Label - 9',
-    hint: 'This will change the label for the Custom Position 9.',
-    scope: 'world',
-    config: false,
-    default: 'Crystal',
-    type: String
+  // Default display names for the 9 custom symbol positions.
+  const customLabelDefaults = ['Good Bye', 'Left Skull', 'Sun', 'Right Skull', 'Moon', 'First Candle', 'Second Candle', 'Key', 'Crystal'];
+  CUSTOM_LABEL_KEYS.forEach((key, i) => {
+    game.settings.register(MODULE_ID, key, {
+      name: `Custom Position Label - ${i + 1}`,
+      hint: `This will change the label for the Custom Position ${i + 1}.`,
+      scope: 'world',
+      config: false,
+      default: customLabelDefaults[i],
+      type: String
+    });
   });
 
   // Stored as JSON string. config: false hides it from the raw settings UI.
   // Accessed via the Map Editor button instead.
-  game.settings.register(moduleName, 'map_data', {
+  game.settings.register(MODULE_ID, SETTINGS.MAP_DATA, {
     name: 'Map Data',
     hint: 'JSON map of board positions. Edit via the Map Editor button in module settings.',
     scope: 'world',
@@ -214,11 +128,11 @@ Hooks.once('init', () => {
 });
 
 /**
- * Injects the Map Editor and Label Editor buttons into the module's settings section.
+ * Injects the Map Editor, Label Editor, and Sound Editor buttons into the module's settings section.
  * Triggered by the renderSettingsConfig hook in the AppV2 settings lifecycle.
  */
 Hooks.on('renderSettingsConfig', (app, html) => {
-  const moduleSection = html.querySelector(`[data-category="${moduleName}"]`);
+  const moduleSection = html.querySelector(`[data-category="${MODULE_ID}"]`);
   if (!moduleSection) return;
 
   const mapButtonDiv = document.createElement('div');
@@ -280,4 +194,3 @@ Hooks.on('renderSettingsConfig', (app, html) => {
     ouija.openSoundEditor();
   });
 });
-

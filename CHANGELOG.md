@@ -1,3 +1,16 @@
+# 0.4.0
+
+- [Added] `scripts/constants.js` — single source of truth for `MODULE_ID`, all setting keys (`SETTINGS`), and `CUSTOM_LABEL_KEYS`
+- [Changed] `init.js` and `ouija.js` now import `MODULE_ID`, `SETTINGS`, and `CUSTOM_LABEL_KEYS` from `constants.js`; no more string literals for the module id or setting keys
+- [Changed] CSS scoping class renamed from `.ouija-dialog` to `.ouija-board-for-sequencer` to match the module id (§12)
+- [Changed] All templates updated to use `ouija-board-for-sequencer` as the root wrapper class
+- [Fixed] `sceneMap()` default case now returns `null` instead of `undefined`, preventing `TypeError` crashes on unknown characters
+- [Fixed] `movePattern1()` and `jiggle()` now guard against null from `sceneMap()`, skipping unknown characters instead of crashing
+- [Fixed] `FilePicker` instantiation now uses `FilePicker.implementation ?? FilePicker` per §2
+- [Changed] Duplicate `new Sequence()` branches in `movePattern1()` collapsed into a single call
+
+
+
 # 0.2.10
 
 - [Changed] Moved all inline styles from templates to `ouija.css` for centralized maintenance

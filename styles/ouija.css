@@ -1,16 +1,16 @@
 /* ============================================================
    Ouija Board for Sequencer — Dialog Styles
-   Scoped to .ouija-dialog to prevent global bleed.
+   Scoped to .ouija-board-for-sequencer to prevent global bleed.
    Applied to DialogV2 content rendered from main-dialog.hbs.
    ============================================================ */
 
-.ouija-dialog {
+.ouija-board-for-sequencer {
   --ouija-border: var(--color-border-light-tertiary, #5a5a52);
   padding: 4px 0;
 }
 
 /* Solid section containers — replaces the semi-transparent .boxcheckpai */
-.ouija-dialog .ouija-section {
+.ouija-board-for-sequencer .ouija-section {
   border: 1px solid var(--ouija-border);
   border-radius: 4px;
   padding: 8px 12px;
@@ -19,7 +19,7 @@
 }
 
 /* Uppercase section title — replaces the hardcoded black/beige .titulo bar */
-.ouija-dialog .ouija-section-title {
+.ouija-board-for-sequencer .ouija-section-title {
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -31,7 +31,7 @@
 }
 
 /* Radio button row */
-.ouija-dialog .ouija-radio-group {
+.ouija-board-for-sequencer .ouija-radio-group {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,7 +39,7 @@
   padding: 2px 0 8px;
 }
 
-.ouija-dialog .ouija-radio-group label {
+.ouija-board-for-sequencer .ouija-radio-group label {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -48,60 +48,60 @@
   font-size: 0.9rem;
 }
 
-.ouija-dialog .ouija-radio-group input[type="radio"] {
+.ouija-board-for-sequencer .ouija-radio-group input[type="radio"] {
   cursor: pointer;
   margin: 0;
 }
 
 /* Full-width textarea */
-.ouija-dialog textarea {
+.ouija-board-for-sequencer textarea {
   width: 100%;
   box-sizing: border-box;
   resize: vertical;
 }
 
 /* Standard form row */
-.ouija-dialog .form-group {
+.ouija-board-for-sequencer .form-group {
   margin-bottom: 6px;
 }
 
-.ouija-dialog .form-group label {
+.ouija-board-for-sequencer .form-group label {
   white-space: nowrap;
 }
 
 /* Hint text rendered inside a label */
-.ouija-dialog .hint {
+.ouija-board-for-sequencer .hint {
   font-size: 0.75em;
   opacity: 0.65;
   font-weight: 400;
 }
 
 /* Side-by-side field pairs (Delay Min / Delay Max) */
-.ouija-dialog .ouija-row {
+.ouija-board-for-sequencer .ouija-row {
   display: flex;
   gap: 12px;
 }
 
-.ouija-dialog .ouija-row .form-group {
+.ouija-board-for-sequencer .ouija-row .form-group {
   flex: 1;
 }
 
-.ouija-dialog select,
-.ouija-dialog input[type="number"] {
+.ouija-board-for-sequencer select,
+.ouija-board-for-sequencer input[type="number"] {
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
 }
 
 /* Description paragraph used across editor dialogs */
-.ouija-dialog .ouija-description {
+.ouija-board-for-sequencer .ouija-description {
   margin-bottom: 0.75em;
   font-size: 0.85em;
   color: var(--color-text-dark-secondary, #555);
 }
 
 /* JSON editor textarea (map-editor) */
-.ouija-dialog .ouija-json-editor {
+.ouija-board-for-sequencer .ouija-json-editor {
   width: 100%;
   font-family: monospace;
   font-size: 0.8em;
@@ -110,78 +110,78 @@
 }
 
 /* Label editor table (label-editor) */
-.ouija-dialog .ouija-label-table {
+.ouija-board-for-sequencer .ouija-label-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.ouija-dialog .ouija-label-cell {
+.ouija-board-for-sequencer .ouija-label-cell {
   padding: 0.3em 0.6em 0.3em 0;
   width: 40%;
   font-size: 0.9em;
 }
 
-.ouija-dialog .ouija-input-cell {
+.ouija-board-for-sequencer .ouija-input-cell {
   padding: 0.3em 0;
 }
 
-.ouija-dialog .ouija-input-cell input {
+.ouija-board-for-sequencer .ouija-input-cell input {
   width: 100%;
 }
 
 /* Form group with extra bottom spacing (sound-editor) */
-.ouija-dialog .ouija-form-spaced {
+.ouija-board-for-sequencer .ouija-form-spaced {
   margin-bottom: 0.75em;
 }
 
 /* File browser row — text input + browse button (sound-editor) */
-.ouija-dialog .ouija-file-row {
+.ouija-board-for-sequencer .ouija-file-row {
   display: flex;
   gap: 0.4em;
 }
 
-.ouija-dialog .ouija-file-row input {
+.ouija-board-for-sequencer .ouija-file-row input {
   flex: 1;
 }
 
 /* Range slider row — slider + value display (sound-editor) */
-.ouija-dialog .ouija-range-row {
+.ouija-board-for-sequencer .ouija-range-row {
   display: flex;
   gap: 0.6em;
   align-items: center;
 }
 
-.ouija-dialog .ouija-range-row input[type="range"] {
+.ouija-board-for-sequencer .ouija-range-row input[type="range"] {
   flex: 1;
 }
 
-.ouija-dialog .ouija-range-display {
+.ouija-board-for-sequencer .ouija-range-display {
   min-width: 2.5em;
   text-align: right;
 }
 
 /* Horizontal divider between sound sections */
-.ouija-dialog .ouija-divider {
+.ouija-board-for-sequencer .ouija-divider {
   margin: 0.75em 0;
 }
 
 /* Checkbox + label inline row (sound-editor toggle) */
-.ouija-dialog .ouija-checkbox-row {
+.ouija-board-for-sequencer .ouija-checkbox-row {
   display: flex;
   align-items: center;
   gap: 0.5em;
 }
 
-.ouija-dialog .ouija-checkbox-label {
+.ouija-board-for-sequencer .ouija-checkbox-label {
   margin: 0;
   font-weight: bold;
 }
 
 /* Capture position coordinate inputs */
-.ouija-dialog .ouija-capture-fields {
+.ouija-board-for-sequencer .ouija-capture-fields {
   gap: 8px;
 }
 
-.ouija-dialog .ouija-capture-input {
+.ouija-board-for-sequencer .ouija-capture-input {
   width: 100px;
 }
