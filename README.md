@@ -1,11 +1,12 @@
 # Ouija Board for Sequencer
+
 This module let you simulate a Ouija Board for your players.
 
 ## Demonstration
 
 [![Demonstration](assets/guide/video-thumbnail.webp)](https://youtu.be/bOmA8z9-R-o)
 
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donate-red?style=for-the-badge&logo=buy-me-a-coffee)](https://buymeacoffee.com/mestredigital)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-Donate-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/mestredigital) [![More Modules](https://img.shields.io/badge/Foundry%20VTT-More%20Modules-red?style=for-the-badge&logo=gamepad)](https://mestredigital.online/pages/projetos-en)
 
 # How to Install
 
@@ -18,7 +19,8 @@ https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/mod
 
 ## Instructions
 
-There is a compendium with journals with instructions. Read it!
+Open **Configure Settings → Ouija Board for Sequencer → Open Instructions** for a
+tabbed guide covering setup, the control dialog, the coordinate map, and labels & sound.
 
 # Community
 

@@ -1,6 +1,13 @@
-import { MODULE_ID, SETTINGS, CUSTOM_LABEL_KEYS } from './constants.js';
+/*!
+ * Ouija Board for Sequencer
+ * Copyright (c) 2021 https://github.com/brunocalado
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3.
+ */
+
+import { MODULE_ID, SETTINGS, CUSTOM_LABEL_KEYS, DEFAULT_MAP } from './constants.js';
 import { ouija } from './ouija.js';
-import { DEFAULT_MAP } from './map-default.js';
 
 Hooks.once('init', () => {
   // --------------------------------------------------
@@ -128,12 +135,25 @@ Hooks.once('init', () => {
 });
 
 /**
- * Injects the Map Editor, Label Editor, and Sound Editor buttons into the module's settings section.
- * Triggered by the renderSettingsConfig hook in the AppV2 settings lifecycle.
+ * Injects the Instructions, Map Editor, Label Editor, and Sound Editor buttons into the
+ * module's settings section. Triggered by the renderSettingsConfig hook in the AppV2
+ * settings lifecycle.
  */
 Hooks.on('renderSettingsConfig', (app, html) => {
   const moduleSection = html.querySelector(`[data-category="${MODULE_ID}"]`);
   if (!moduleSection) return;
+
+  const instructionsButtonDiv = document.createElement('div');
+  instructionsButtonDiv.classList.add('form-group');
+  instructionsButtonDiv.innerHTML = `
+    <label>Instructions</label>
+    <div class="form-fields">
+      <button type="button" id="ouija-open-instructions">
+        <i class="fas fa-book-open"></i> Open Instructions
+      </button>
+    </div>
+    <p class="hint">How to set up and use the Ouija board, organized by tabs.</p>
+  `;
 
   const mapButtonDiv = document.createElement('div');
   mapButtonDiv.classList.add('form-group');
@@ -173,14 +193,22 @@ Hooks.on('renderSettingsConfig', (app, html) => {
 
   const firstGroup = moduleSection.querySelector('.form-group');
   if (firstGroup) {
+    // Insert Instructions first so it ends up above the other injected buttons,
+    // while all of them stay just above the module's first real setting.
+    moduleSection.insertBefore(instructionsButtonDiv, firstGroup);
     moduleSection.insertBefore(soundButtonDiv, firstGroup);
     moduleSection.insertBefore(labelButtonDiv, firstGroup);
     moduleSection.insertBefore(mapButtonDiv, firstGroup);
   } else {
+    moduleSection.appendChild(instructionsButtonDiv);
     moduleSection.appendChild(mapButtonDiv);
     moduleSection.appendChild(labelButtonDiv);
     moduleSection.appendChild(soundButtonDiv);
   }
+
+  instructionsButtonDiv.querySelector('#ouija-open-instructions').addEventListener('click', () => {
+    ouija.openInstructions();
+  });
 
   mapButtonDiv.querySelector('#ouija-open-map-editor').addEventListener('click', () => {
     ouija.openMapEditor();

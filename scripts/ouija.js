@@ -1,5 +1,13 @@
-import { MODULE_ID, SETTINGS, CUSTOM_LABEL_KEYS } from './constants.js';
-import { DEFAULT_MAP } from './map-default.js';
+/*!
+ * Ouija Board for Sequencer
+ * Copyright (c) 2021 https://github.com/brunocalado
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3.
+ */
+
+import { MODULE_ID, SETTINGS, CUSTOM_LABEL_KEYS, DEFAULT_MAP } from './constants.js';
+import { OuijaInstructions } from './instructions-app.js';
 
 let ouija_map;
 let ouija_token;
@@ -15,7 +23,7 @@ export class ouija {
    */
   static async main(map = null) {
     if (!map) {
-      map = this._parseMap();
+      map = this.parseMap();
       if (!map) return;
     }
 
@@ -153,7 +161,7 @@ export class ouija {
    * @param {number} durationMs - Desired animation duration in milliseconds
    * @returns {number} Speed in grid squares per second
    */
-  static _calcGridSpeed(from, to, durationMs) {
+  static calcGridSpeed(from, to, durationMs) {
     const dx = to.x - from.x;
     const dy = to.y - from.y;
     const pixelDistance = Math.sqrt(dx * dx + dy * dy);
@@ -172,10 +180,10 @@ export class ouija {
    * @param {number} durationMs - Desired animation duration in milliseconds
    * @returns {Promise<void>}
    */
-  static async _animatedMove(target, durationMs) {
+  static async animatedMove(target, durationMs) {
     const from = { x: ouija_token.x, y: ouija_token.y };
     const originalSpeed = CONFIG.Token.movement.defaultSpeed;
-    CONFIG.Token.movement.defaultSpeed = this._calcGridSpeed(from, target, durationMs);
+    CONFIG.Token.movement.defaultSpeed = this.calcGridSpeed(from, target, durationMs);
 
     await ouija_token.document.move([{ x: target.x, y: target.y }]);
     // movementAnimationPromise resolves when the canvas animation finishes — without
@@ -203,9 +211,9 @@ export class ouija {
     // Cap jiggle duration so it stays snappy regardless of the global moveSpeed setting.
     const jiggleDuration = Math.min(moveSpeed / 2, 400);
 
-    await this._animatedMove(jigglePos, jiggleDuration);
+    await this.animatedMove(jigglePos, jiggleDuration);
     await new Promise(resolve => setTimeout(resolve, 250));
-    await this._animatedMove(xyPosition, jiggleDuration);
+    await this.animatedMove(xyPosition, jiggleDuration);
     await new Promise(resolve => setTimeout(resolve, 200));
   }
 
@@ -213,7 +221,7 @@ export class ouija {
    * Standard movement pattern: move token, rotate toward bottom, play sound.
    * When the "Use End Sound" toggle is enabled, plays the end sound on the final move
    * instead of the normal move sound.
-   * Uses _animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
+   * Uses animatedMove() to honour moveSpeed (ms) via CONFIG.Token.movement.defaultSpeed.
    * @param {string} position - The target letter/position key
    * @param {boolean} [isLast=true] - Whether this is the final move of a sequence.
    *   When true and use_end_sound is enabled, plays the end sound instead of the primary sound.
@@ -234,7 +242,7 @@ export class ouija {
     );
     const rotationDeg = Math.toDegrees(ray.angle);
 
-    await this._animatedMove(xyPosition, moveSpeed);
+    await this.animatedMove(xyPosition, moveSpeed);
     await ouija_token.document.update({ rotation: rotationDeg });
 
     const soundKey  = (useEndSound && isLast) ? SETTINGS.END_MOVE_SOUND        : SETTINGS.MOVE_SOUND;
@@ -331,7 +339,7 @@ export class ouija {
    * Shows a user-visible error and returns null on invalid JSON.
    * @returns {Object|null} The parsed map object or null on failure.
    */
-  static _parseMap() {
+  static parseMap() {
     const raw = game.settings.get(MODULE_ID, SETTINGS.MAP_DATA);
     try {
       return JSON.parse(raw);
@@ -348,9 +356,17 @@ export class ouija {
    * Usage: Ouija.Control()
    */
   static async Control() {
-    const map = this._parseMap();
+    const map = this.parseMap();
     if (!map) return;
     await this.main(map);
+  }
+
+  /**
+   * Opens the tabbed Instructions window.
+   * Triggered from the injected button in the module settings UI.
+   */
+  static openInstructions() {
+    return OuijaInstructions.show();
   }
 
   /**

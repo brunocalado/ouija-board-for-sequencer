@@ -1,3 +1,14 @@
+# 0.4.1
+
+- [Added] Instructions window — a tabbed help window (`OuijaInstructions` ApplicationV2) opened from a new **Open Instructions** button at the top of the module settings; tabs: Getting Started, Controls, Map / Capture, Labels & Sound
+- [Removed] `journal-ouija-board` compendium — its guidance now lives in the Instructions window; unregistered from `module.json` `packs` and `packFolders`, and README updated to point at the new window (delete the `packs/journal-ouija-board/` folder with Foundry stopped)
+- [Added] `scripts/instructions-app.js`, `templates/instructions.hbs`, `styles/instructions.css` (registered in `module.json`); `ouija.openInstructions()` delegates to `OuijaInstructions.show()`
+- [Added] GPLv3 license header as the first lines of every `.js` and `.css` file (`constants.js`, `init.js`, `ouija.js`, `ouija.css`) per CLAUDE.md
+- [Changed] Moved `DEFAULT_MAP` into `scripts/constants.js` so all module-wide constants live in one dependency-free leaf; removed `scripts/map-default.js` and updated imports in `init.js` and `ouija.js`
+- [Changed] Renamed internal helpers `_parseMap` → `parseMap`, `_calcGridSpeed` → `calcGridSpeed`, `_animatedMove` → `animatedMove` in `ouija.js` — the `_` prefix is reserved for overrides of documented `@protected` methods
+- [Fixed] `module.json` `esmodules` entry `/scripts/init.js` → `scripts/init.js` (module-relative path, consistent with the `styles` entry)
+- [Fixed] `.claudeignore` scratch-path glob `WORKSPACE/**` → `workspace/**` to match the actual directory name on case-sensitive filesystems
+
 # 0.4.0
 
 - [Added] `scripts/constants.js` — single source of truth for `MODULE_ID`, all setting keys (`SETTINGS`), and `CUSTOM_LABEL_KEYS`

@@ -2,7 +2,6 @@
   "id": "ouija-board-for-sequencer",
   "title": "Ouija Board for Sequencer",
   "description": "This module let you simulate a Ouija Board for your players.",
-
   "authors": [
     {
       "name": "Mestre Digital",
@@ -10,69 +9,75 @@
       "flags": {}
     }
   ],
-  
-  "version": "0.4.0",
-  
+  "version": "0.4.1",
   "compatibility": {
-    "minimum": 14,
-    "verified": 14
+    "minimum": "14",
+    "verified": "14",
+    "maximum": "14"
   },
-  
-  "esmodules": ["/scripts/init.js"],
-  "styles": ["styles/ouija.css"],
-  "languages": [],
-
-  "packs": [
+  "esmodules": [
+    "scripts/init.js"
+  ],
+  "styles": [
     {
-      "name": "journal-ouija-board",
-      "label": "Journal",
-      "path": "packs/journal-ouija-board",
-      "type": "JournalEntry",
-      "module": "ouija-board-for-sequencer"
+      "src": "styles/ouija.css"
     },
+    {
+      "src": "styles/instructions.css"
+    }
+  ],
+  "packs": [
     {
       "name": "macros-ouija-board",
       "label": "Macros",
       "path": "packs/macros-ouija-board",
       "type": "Macro",
-      "module": "ouija-board-for-sequencer"
+      "module": "ouija-board-for-sequencer",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     },
     {
       "name": "scene-ouija-board",
       "label": "Scene",
       "path": "packs/scene-ouija-board",
       "type": "Scene",
-      "module": "ouija-board-for-sequencer"
-    }  
+      "module": "ouija-board-for-sequencer",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
   ],
-
   "packFolders": [
     {
       "name": "Ouija Board for Sequencer",
       "sorting": "a",
       "color": "#9f1d1d",
       "packs": [
-        "journal-ouija-board",
         "macros-ouija-board",
         "scene-ouija-board"
       ],
       "folders": []
     }
   ],
-  
   "relationships": {
-    "requires": [{
-      "id": "sequencer",
-      "type": "module",
-      "manifest": "https://github.com/Haxxer/FoundryVTT-Sequencer/releases/latest/download/module.json",
-      "compatibility": {
-        "minimum": "4.2.0"
+    "requires": [
+      {
+        "id": "sequencer",
+        "type": "module",
+        "manifest": "https://github.com/Haxxer/FoundryVTT-Sequencer/releases/latest/download/module.json",
+        "compatibility": {
+          "minimum": "4.2.0"
+        }
       }
-    }]
+    ]
   },
-  
-  "url": "https://github.com/brunocalado/ouija-board-for-sequencer", 
+  "url": "https://github.com/brunocalado/ouija-board-for-sequencer",
   "manifest": "https://raw.githubusercontent.com/brunocalado/ouija-board-for-sequencer/main/module.json",
-  "download": "https://codeload.github.com/brunocalado/ouija-board-for-sequencer/zip/main"
-
+  "download": "https://codeload.github.com/brunocalado/ouija-board-for-sequencer/zip/main",
+  "flags": {}
 }

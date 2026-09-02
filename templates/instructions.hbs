@@ -1,0 +1,143 @@
+<div class="ouija-instructions-layout">
+
+  <nav class="ouija-tab-nav">
+    {{#each tabs}}
+    <button type="button" class="ouija-tab" data-action="showTab" data-tab="{{id}}">
+      <i class="{{icon}}"></i> {{label}}
+    </button>
+    {{/each}}
+  </nav>
+
+  <div class="ouija-tab-body">
+
+    {{!-- ============================ Getting Started ============================ --}}
+    <section class="ouija-tab-panel" data-tab="getting-started">
+      <h3>What this module does</h3>
+      <p>
+        It turns a token into the planchette of a Ouija board. On command the token glides
+        across a board scene, stopping on letters to spell out a message or jumping straight
+        to <strong>YES</strong>, <strong>NO</strong> or one of nine custom symbols, with a
+        sound on every move.
+      </p>
+
+      <h4>Requirements</h4>
+      <ul>
+        <li>The <strong>Sequencer</strong> module (v4.2.0 or newer) must be installed and active — it drives every movement sound.</li>
+      </ul>
+
+      <h4>One-time setup</h4>
+      <ol>
+        <li>Open the <em>Ouija Board for Sequencer</em> compendium folder in the sidebar.</li>
+        <li>Import the <strong>Scene</strong> compendium entry into your world and activate it. It already holds the board art and a planchette token that matches the default coordinate map.</li>
+        <li>Import the <strong>Macros</strong> compendium if you want the ready-made shortcuts.</li>
+        <li>Using your own board art instead? Any token can act as the planchette — you will just need to rebuild the coordinate map (see the <em>Map / Capture</em> tab).</li>
+      </ol>
+
+      <h4>Running it</h4>
+      <ol>
+        <li>Select the planchette token. If nothing is selected, the first token in the scene is used automatically.</li>
+        <li>Run the <strong>Control</strong> macro, or call <code>Ouija.Control()</code> from a script macro.</li>
+        <li>The control dialog opens. Type a message or pick a position, then click <strong>Move</strong>.</li>
+      </ol>
+
+      <div class="ouija-note">
+        The token is deselected when a move starts so players do not see the selection ring.
+      </div>
+    </section>
+
+    {{!-- ============================ Controls ============================ --}}
+    <section class="ouija-tab-panel" data-tab="controls">
+      <h3>The control dialog</h3>
+      <p>Opened with <code>Ouija.Control()</code> or the <strong>Control</strong> macro.</p>
+
+      <h4>Message / Yes / No</h4>
+      <ul>
+        <li><strong>Message</strong> — the planchette spells out the text in the box below, one character at a time. Letters <code>a–z</code>, digits <code>0–9</code> and spaces are mapped; any other character is silently skipped. Two identical characters in a row get a short "jiggle" so the repeat is visible.</li>
+        <li><strong>Yes</strong> / <strong>No</strong> — sends the planchette straight to the YES or NO symbol and ignores the text box.</li>
+      </ul>
+
+      <h4>Custom Position</h4>
+      <p>
+        A dropdown of the nine custom symbol positions. Leave it on <strong>Choose</strong> to
+        ignore it; pick an entry and it overrides the Message / Yes / No selection for that move.
+        The entry names come from the <em>Labels</em> editor.
+      </p>
+
+      <h4>Timing</h4>
+      <ul>
+        <li><strong>Delay Min</strong> / <strong>Delay Max</strong> — an extra random wait (in seconds) added after each move before the next one begins; passed straight to Sequencer's <code>.wait(min, max)</code>. Set both to the same value for a fixed pause. Allowed range 1–10000.</li>
+        <li><strong>Move Speed</strong> — milliseconds for a single move. Higher is slower. Allowed range 500–3000.</li>
+      </ul>
+      <p>Delay Min, Delay Max and Move Speed are saved each time you click <strong>Move</strong> and pre-filled on the next open.</p>
+
+      <h4>Persistent Dialog</h4>
+      <p>
+        A world setting in the module configuration. When <strong>on</strong>, the dialog stays
+        open after <strong>Move</strong> so you can send several messages in a row. When
+        <strong>off</strong>, it closes after each move. <strong>Cancel</strong> or closing the
+        window ends without moving.
+      </p>
+    </section>
+
+    {{!-- ============================ Map / Capture ============================ --}}
+    <section class="ouija-tab-panel" data-tab="map">
+      <h3>The coordinate map</h3>
+      <p>
+        The "map" is a JSON object of canvas pixel coordinates for every letter, number and
+        symbol, plus <code>bottomLocation</code> — the point the planchette rotates to face
+        after each move. It is stored in the world setting <strong>Map Data</strong> and ships
+        with a default that matches the bundled board scene.
+      </p>
+
+      <h4>Edit Map</h4>
+      <ul>
+        <li>The <strong>Edit Map</strong> button in module settings opens the raw JSON.</li>
+        <li>Keys must be exactly: <code>letter_a</code>…<code>letter_z</code>, <code>number_0</code>…<code>number_9</code>, <code>symbol_space</code>, <code>symbol_yes</code>, <code>symbol_no</code>, <code>symbol_01</code>…<code>symbol_09</code>, and <code>bottomLocation</code>. Each value is <code>{ "x": &lt;number&gt;, "y": &lt;number&gt; }</code>.</li>
+        <li><strong>Save</strong> validates the JSON first — invalid JSON is rejected and nothing is written.</li>
+        <li><strong>Reset to Default</strong> restores the bundled map.</li>
+      </ul>
+
+      <h4>Capture Position</h4>
+      <p>The practical way to build a map for a custom board. Run it from its macro or <code>Ouija.capturePosition()</code>.</p>
+      <ol>
+        <li>Drop a token where a symbol should be and select it.</li>
+        <li>Run Capture Position. The dialog is pre-filled with the token's current X / Y (still editable).</li>
+        <li>Choose which map key to overwrite — custom symbols show their friendly label — and click <strong>Save to Map</strong>.</li>
+      </ol>
+      <div class="ouija-note">
+        The map is re-read fresh on save, so capturing positions one at a time will not overwrite
+        edits you made in the Map Editor in between.
+      </div>
+
+      <h4>Tips</h4>
+      <ul>
+        <li>Coordinates are canvas pixels at the scene's native resolution.</li>
+        <li>If the planchette lands slightly off a symbol, nudge that one value and re-test rather than redoing the whole map.</li>
+      </ul>
+    </section>
+
+    {{!-- ============================ Labels & Sound ============================ --}}
+    <section class="ouija-tab-panel" data-tab="labels-sound">
+      <h3>Custom Position Labels</h3>
+      <p>
+        The <strong>Edit Labels</strong> button in module settings sets the display text for the
+        nine custom positions (<code>symbol_01</code>…<code>symbol_09</code>). These labels appear
+        in the control dialog's <strong>Custom Position</strong> dropdown and in the Capture
+        Position key list.
+      </p>
+      <ul>
+        <li>Maximum 30 characters each; trimmed and truncated on save.</li>
+        <li>Defaults: Good Bye, Left Skull, Sun, Right Skull, Moon, First Candle, Second Candle, Key, Crystal.</li>
+      </ul>
+
+      <h3>Sound</h3>
+      <p>The <strong>Edit Sound</strong> button in module settings opens all sound options. Playback runs through Sequencer.</p>
+      <ul>
+        <li><strong>Move Sound</strong> + <strong>Move Sound Volume</strong> — played on every move. Use the file button to browse audio; volume is 0–1 in 0.1 steps.</li>
+        <li><strong>Use End Sound</strong> — when on, the <em>final</em> move of a message plays the End Move Sound instead of the normal Move Sound. A single-position move (Yes / No / a custom position) counts as final. When off, the move sound plays throughout.</li>
+        <li><strong>End Move Sound</strong> + <strong>End Move Sound Volume</strong> — shown only while <strong>Use End Sound</strong> is enabled.</li>
+      </ul>
+    </section>
+
+  </div>
+</div>
